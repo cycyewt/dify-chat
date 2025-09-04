@@ -24,19 +24,19 @@ export default function ThemeSelector(props: IThemeSelectorProps) {
 						type: 'item',
 						key: ThemeModeEnum.SYSTEM,
 						label: ThemeModeLabelEnum.SYSTEM,
-						icon: <DynamicIcon name="sun-moon" />,
+						icon: <DynamicIcon name="monitor" size={16} />,
 					},
 					{
 						type: 'item',
 						key: ThemeModeEnum.LIGHT,
 						label: ThemeModeLabelEnum.LIGHT,
-						icon: <DynamicIcon name="sun" />,
+						icon: <DynamicIcon name="sun" size={16} />,
 					},
 					{
 						type: 'item',
 						key: ThemeModeEnum.DARK,
 						label: ThemeModeLabelEnum.DARK,
-						icon: <DynamicIcon name="moon" />,
+						icon: <DynamicIcon name="moon" size={16} />,
 					},
 				],
 				onClick: (item) => {

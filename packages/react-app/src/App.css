@@ -57,6 +57,10 @@
 				background-color: transparent !important;
 				padding: 0 !important;
 				margin-bottom: 0.25rem;
+
+				&:first-of-type {
+					@apply mt-3;
+				}
 			}
 		}
 

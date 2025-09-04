@@ -1,4 +1,4 @@
-import { DownOutlined } from '@ant-design/icons'
+import { DownCircleOutlined } from '@ant-design/icons'
 import {
 	AppContextProvider,
 	DEFAULT_APP_SITE_SETTING,
@@ -207,7 +207,7 @@ const MultiAppLayout = () => {
 																</div>
 															),
 															onClick: () => {
-																history.push(`/app/${item.id}`)
+																history.push(`/apps/${item.id}`)
 																setSelectedAppId(item.id)
 															},
 															icon: (
@@ -225,7 +225,7 @@ const MultiAppLayout = () => {
 												<span className="cursor-pointer w-full inline-block truncate">
 													{currentApp?.config?.info?.name}
 												</span>
-												<DownOutlined className="ml-1" size={12} />
+												<DownCircleOutlined className="ml-1 w-3 h-3" />
 											</div>
 										</Dropdown>
 									</div>

@@ -441,7 +441,7 @@ export default function ChatLayout(props: IChatLayoutProps) {
 											<div className="text-theme-text my-1.5 hover:text-primary flex items-center">
 												<LucideIcon
 													name="plus-circle"
-													strokeWidth={1.25}
+													strokeWidth={1}
 													size={28}
 													className="cursor-pointer"
 													onClick={() => {
@@ -464,7 +464,7 @@ export default function ChatLayout(props: IChatLayoutProps) {
 											<div className="flex items-center justify-center">
 												<LucideIcon
 													className="my-1.5 cursor-pointer hover:text-primary"
-													strokeWidth={1.25}
+													strokeWidth={1}
 													size={28}
 													name="menu"
 												/>

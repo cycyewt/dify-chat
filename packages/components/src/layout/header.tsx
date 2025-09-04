@@ -83,7 +83,7 @@ export default function HeaderLayout(props: IHeaderLayoutProps) {
 											? 'moon'
 											: themeMode === 'light'
 												? 'sun'
-												: 'sun-moon'
+												: 'monitor'
 									}
 									size={20}
 								/>

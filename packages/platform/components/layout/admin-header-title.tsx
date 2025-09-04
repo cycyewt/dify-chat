@@ -64,9 +64,9 @@ export default function AdminHeaderTitle() {
 		<Space>
 			<Segmented
 				value={activeKey}
-				size="large"
 				shape="round"
 				options={TopMenuOptions}
+				rootClassName={'text-primary'}
 				onChange={key => {
 					const route = TopMenuOptions.find(item => item.value === key)?.route
 					if (route) {
@@ -83,6 +83,7 @@ export default function AdminHeaderTitle() {
 				>
 					<Button
 						type="text"
+						shape="round"
 						icon={<UserOutlined />}
 					>
 						{session.user.name || session.user.email}

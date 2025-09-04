@@ -50,15 +50,15 @@ export default function SettingForm(props: ISettingFormProps) {
 			</Form.Item>
 
 			<Form.Item
-				label="API Secret"
+				label="API Key"
 				name="apiKey"
-				tooltip="Dify App 的 API Secret (以 app- 开头)"
-				rules={[{ required: true, message: 'API Secret 不能为空' }]}
+				tooltip="Dify App 的 API Key (以 app- 开头)"
+				rules={[{ required: true, message: 'API Key 不能为空' }]}
 				required
 			>
 				<Input.Password
 					autoComplete="new-password"
-					placeholder="请输入 API Secret"
+					placeholder="请输入 API Key"
 				/>
 			</Form.Item>
 

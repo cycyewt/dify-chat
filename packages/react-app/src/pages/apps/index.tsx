@@ -69,11 +69,11 @@ export default function AppListPage() {
 								>
 									<div
 										key={item.id}
-										className={`relative group p-3 bg-theme-btn-bg border border-solid border-theme-border rounded-2xl cursor-pointer hover:border-primary hover:text-primary`}
+										className={`relative group p-3 bg-theme-btn-bg shadow-sm border border-solid border-theme-border rounded-2xl cursor-pointer hover:border-primary hover:text-primary`}
 									>
 										<div
 											onClick={() => {
-												history.push(`/app/${item.id}`)
+												history.push(`/apps/${item.id}`)
 											}}
 										>
 											<div className="flex items-center overflow-hidden">

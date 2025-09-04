@@ -16,7 +16,7 @@ initResponsiveConfig()
 const routes: IRoute[] = [
 	{ path: '/auth', component: () => <AuthPage /> },
 	{ path: '/chat', component: () => <ChatPage /> },
-	{ path: '/app/:appId', component: () => <ChatPage /> },
+	{ path: '/apps/:appId', component: () => <ChatPage /> },
 	{ path: '/apps', component: () => <AppListPage /> },
 ]
 
