@@ -194,6 +194,7 @@ const MultiAppLayout = () => {
 											arrow
 											placement="bottom"
 											trigger={['hover']}
+											forceRender={true}
 											menu={{
 												selectedKeys: [selectedAppId],
 												items: [

@@ -285,7 +285,7 @@ export const Chatbox = (props: ChatboxProps) => {
 						height: '100%', // Specify a value
 						overflow: 'auto',
 						display: 'flex',
-						flexDirection: messageItems.length > 4 ? 'column-reverse' : 'column',
+						flexDirection: messageItems.length > 40000 ? 'column-reverse' : 'column',
 					}}
 				>
 					<InfiniteScroll
