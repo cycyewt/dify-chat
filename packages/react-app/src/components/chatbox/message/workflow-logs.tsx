@@ -140,7 +140,7 @@ export default function WorkflowLogs(props: IWorkflowLogsProps) {
 	]
 
 	return (
-		<div className={`md:min-w-chat-card mb-3 ${className || ''}`}>
+		<div className={`md:min-w-chat-card mb-3 first:mt-3 ${className || ''}`}>
 			<Collapse
 				items={collapseItems}
 				size="small"
