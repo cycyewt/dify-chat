@@ -389,6 +389,7 @@ export default function ChatLayout(props: IChatLayoutProps) {
 							</Dropdown>
 						) : null
 					}
+					logoText={''}
 				/>
 
 				{/* Main */}

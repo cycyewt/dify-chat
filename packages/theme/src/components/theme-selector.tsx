@@ -24,7 +24,7 @@ export default function ThemeSelector(props: IThemeSelectorProps) {
 						type: 'item',
 						key: ThemeModeEnum.SYSTEM,
 						label: ThemeModeLabelEnum.SYSTEM,
-						icon: <DynamicIcon name="screen-share" />,
+						icon: <DynamicIcon name="sun-moon" />,
 					},
 					{
 						type: 'item',
@@ -36,7 +36,7 @@ export default function ThemeSelector(props: IThemeSelectorProps) {
 						type: 'item',
 						key: ThemeModeEnum.DARK,
 						label: ThemeModeLabelEnum.DARK,
-						icon: <DynamicIcon name="moon-star" />,
+						icon: <DynamicIcon name="moon" />,
 					},
 				],
 				onClick: (item) => {

@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import React from 'react'
 
 import CenterTitleWrapper from './center-title-wrapper'
-import { GithubIcon, Logo } from './logo'
+import { Logo } from './logo'
 
 export interface IHeaderLayoutProps {
 	/**
@@ -79,16 +79,15 @@ export default function HeaderLayout(props: IHeaderLayoutProps) {
 								<LucideIcon
 									name={
 										themeMode === 'dark'
-											? 'moon-star'
+											? 'moon'
 											: themeMode === 'light'
 												? 'sun'
-												: 'screen-share'
+												: 'sun-moon'
 									}
 									size={20}
 								/>
 							</div>
 						</ThemeSelector>
-						<GithubIcon />
 					</Space>
 				)}
 			</HeaderSiderIcon>

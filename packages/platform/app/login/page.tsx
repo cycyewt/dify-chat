@@ -54,10 +54,10 @@ export default function LoginPage() {
 							src={LogoIcon}
 							width={64}
 							height={64}
-							alt="Dify Chat Platform"
+							alt="管理后台"
 						/>
 					</div>
-					<h1 className="text-2xl font-bold text-gray-900">Dify Chat Platform</h1>
+					<h1 className="text-2xl font-bold text-gray-900">管理后台</h1>
 					<p className="text-gray-600 mt-2">请登录您的账户</p>
 				</div>
 

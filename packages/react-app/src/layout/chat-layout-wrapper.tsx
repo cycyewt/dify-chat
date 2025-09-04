@@ -1,4 +1,4 @@
-import { DownCircleTwoTone } from '@ant-design/icons'
+import { DownOutlined } from '@ant-design/icons'
 import {
 	AppContextProvider,
 	DEFAULT_APP_SITE_SETTING,
@@ -193,7 +193,7 @@ const MultiAppLayout = () => {
 										<Dropdown
 											arrow
 											placement="bottom"
-											trigger={['click']}
+											trigger={['hover']}
 											menu={{
 												selectedKeys: [selectedAppId],
 												items: [
@@ -225,7 +225,7 @@ const MultiAppLayout = () => {
 												<span className="cursor-pointer w-full inline-block truncate">
 													{currentApp?.config?.info?.name}
 												</span>
-												<DownCircleTwoTone className="ml-1" />
+												<DownOutlined className="ml-1" size={12} />
 											</div>
 										</Dropdown>
 									</div>
