@@ -152,7 +152,7 @@ export default function UserManagementPage() {
 
 	return (
 		<div className="mx-auto px-4 w-full 2xl:!w-3/4 h-full">
-			<div className="flex justify-between items-center mb-6">
+			<div className="flex justify-between items-end mb-6">
 				<div>
 					<Title level={3} className={'!mb-0'}>用户管理</Title>
 					<p className="mt-1 text-gray-600">管理系统用户账户</p>
