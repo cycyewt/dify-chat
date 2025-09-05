@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
 import UserEditDrawer from './components/user-edit-drawer'
+import Title from 'antd/es/typography/Title'
 
 interface User {
 	id: string
@@ -150,11 +151,11 @@ export default function UserManagementPage() {
 	]
 
 	return (
-		<div className="px-6 w-full h-full">
+		<div className="mx-auto px-4 w-full 2xl:!w-3/4 h-full">
 			<div className="flex justify-between items-center mb-6">
 				<div>
-					<h1 className="text-2xl font-bold">用户管理</h1>
-					<p className="text-gray-600 mt-1">管理系统用户账户</p>
+					<Title level={3} className={'!mb-0'}>用户管理</Title>
+					<p className="mt-1 text-gray-600">管理系统用户账户</p>
 				</div>
 				<Button
 					type="primary"
@@ -166,6 +167,7 @@ export default function UserManagementPage() {
 			</div>
 
 			<Table
+				size={'small'}
 				columns={columns}
 				dataSource={users}
 				rowKey="id"

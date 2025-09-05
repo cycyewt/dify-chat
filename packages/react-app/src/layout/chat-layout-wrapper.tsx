@@ -1,4 +1,4 @@
-import { DownCircleOutlined } from '@ant-design/icons'
+import { DownOutlined } from '@ant-design/icons'
 import {
 	AppContextProvider,
 	DEFAULT_APP_SITE_SETTING,
@@ -226,7 +226,7 @@ const MultiAppLayout = () => {
 												<span className="cursor-pointer w-full inline-block truncate">
 													{currentApp?.config?.info?.name}
 												</span>
-												<DownCircleOutlined className="ml-1 w-3 h-3" />
+												<DownOutlined className="ml-1 w-[10px] h-[10px] text-gray-500" />
 											</div>
 										</Dropdown>
 									</div>
