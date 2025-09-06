@@ -28,9 +28,15 @@ export default function LoginPage() {
 			})
 
 			if (result?.error) {
-				message.error('登录失败，请检查邮箱和密码')
+				message.open({
+					type: 'error',
+					content: '登录失败，请检查邮箱和密码'
+				})
 			} else {
-				message.success('登录成功')
+				message.open({
+					type: 'success',
+					content: '登录成功'
+				})
 				// 获取会话信息并跳转
 				const session = await getSession()
 				if (session) {
@@ -39,7 +45,10 @@ export default function LoginPage() {
 			}
 		} catch (error) {
 			console.error('登录过程中发生错误', error)
-			message.error('登录过程中发生错误')
+			message.open({
+				type: 'error',
+				content: '登录过程中发生错误'
+			})
 		} finally {
 			setLoading(false)
 		}

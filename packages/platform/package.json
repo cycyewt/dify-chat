@@ -16,6 +16,7 @@
 		"db:switch": "npx tsx scripts/switch-db.ts",
 		"db:switch:sqlite": "npx tsx scripts/switch-db.ts sqlite",
 		"db:switch:postgresql": "npx tsx scripts/switch-db.ts postgresql",
+		"db:switch:mysql": "npx tsx scripts/switch-db.ts mysql",
 		"create-admin": "tsx scripts/create-admin.ts",
 		"postinstall": "prisma generate"
 	},

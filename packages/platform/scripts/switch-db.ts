@@ -11,6 +11,7 @@ const TEMPLATES_DIR = path.join(SCHEMA_DIR, 'templates')
 const MAIN_SCHEMA = path.join(SCHEMA_DIR, 'schema.prisma')
 const SQLITE_TEMPLATE = path.join(TEMPLATES_DIR, 'schema.sqlite.template')
 const POSTGRESQL_TEMPLATE = path.join(TEMPLATES_DIR, 'schema.postgresql.template')
+const MYSQL_TEMPLATE = path.join(TEMPLATES_DIR, 'schema.mysql.template')
 
 function showUsage() {
 	console.log(`
@@ -22,6 +23,7 @@ function showUsage() {
 支持的 provider:
   sqlite      - 切换到 SQLite 数据库
   postgresql  - 切换到 PostgreSQL 数据库
+  mysql       - 切换到 MySQL 数据库
 
 示例:
   npx tsx scripts/switch-db.ts sqlite
@@ -30,6 +32,7 @@ function showUsage() {
 环境变量配置:
   SQLite:     DATABASE_URL="file:./prisma/dev.db"
   PostgreSQL: DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
+  MySQL:      DATABASE_URL="mysql://user:password@localhost:5432/dbname"
 `)
 }
 
@@ -45,6 +48,10 @@ function switchDatabase(provider: string): void {
 		case 'postgres':
 			sourceTemplate = POSTGRESQL_TEMPLATE
 			console.log('🔄 切换到 PostgreSQL 数据库...')
+			break
+		case 'mysql':
+			sourceTemplate = MYSQL_TEMPLATE
+			console.log('🔄 切换到 MySQL 数据库...')
 			break
 		default:
 			console.error(`❌ 不支持的数据库类型: ${provider}`)
@@ -74,8 +81,10 @@ function switchDatabase(provider: string): void {
 		console.log('\n📝 请确保设置正确的环境变量:')
 		if (provider.toLowerCase() === 'sqlite') {
 			console.log('   DATABASE_URL="file:./prisma/dev.db"')
-		} else {
+		} else if (provider.toLowerCase() === 'postgresql') {
 			console.log('   DATABASE_URL="postgresql://user:password@localhost:5432/dbname"')
+		} else {
+			console.log('   DATABASE_URL="mysql://user:password@localhost:5432/dbname"')
 		}
 
 		console.log('\n🔧 接下来的步骤:')
