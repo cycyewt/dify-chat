@@ -20,9 +20,9 @@ export default function SettingForm(props: ISettingFormProps) {
 		<Form
 			autoComplete="off"
 			form={formInstance}
-			labelAlign="left"
+			labelAlign="right"
 			labelCol={{
-				span: 5,
+				span: 6,
 			}}
 			initialValues={{
 				enableAnswerForm: false,

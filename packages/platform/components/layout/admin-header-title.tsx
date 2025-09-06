@@ -1,6 +1,6 @@
 'use client'
 
-import { AppstoreOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons'
+import { AppstoreOutlined, LogoutOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Dropdown, message, Segmented, Space } from 'antd'
 import { signOut, useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 
 enum ETopMenuKeys {
 	AppManagement = 'app-management',
+	RoleManagement = 'role-management',
 	UserManagement = 'user-management',
 }
 
@@ -24,6 +25,12 @@ const TopMenuOptions: ITopMenuOption[] = [
 		icon: <AppstoreOutlined />,
 		value: ETopMenuKeys.AppManagement,
 		route: '/app-management',
+	},
+	{
+		label: '角色管理',
+		icon: <TeamOutlined />,
+		value: ETopMenuKeys.RoleManagement,
+		route: '/role-management',
 	},
 	{
 		label: '用户管理',

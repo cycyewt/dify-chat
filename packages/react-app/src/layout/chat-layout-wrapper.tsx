@@ -226,7 +226,7 @@ const MultiAppLayout = () => {
 												<span className="cursor-pointer w-full inline-block truncate">
 													{currentApp?.config?.info?.name}
 												</span>
-												<DownOutlined className="ml-1 w-[10px] h-[10px] text-gray-500" />
+												<DownOutlined className="ml-1 w-2 h-2 text-gray-500" />
 											</div>
 										</Dropdown>
 									</div>

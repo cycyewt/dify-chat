@@ -47,6 +47,7 @@ export default function AppManagementPage() {
 				<Button
 					type="primary"
 					icon={<PlusOutlined />}
+					className={'leading-none'}
 					onClick={() => {
 						setAppEditDrawerMode(AppDetailDrawerModeEnum.create)
 						setAppEditDrawerOpen(true)
@@ -60,6 +61,7 @@ export default function AppManagementPage() {
 			<Table
 				size={'small'}
 				dataSource={list}
+				rowKey='id'
 				loading={listLoading}
 				scroll={{ x: 1200 }}
 				columns={[
@@ -179,6 +181,8 @@ export default function AppManagementPage() {
 								<Popconfirm
 									title="确定删除该应用吗？"
 									description="删除后将无法恢复"
+									okText="确定"
+									cancelText="取消"
 									onConfirm={async () => {
 										await deleteApp(record.id)
 										message.success('删除应用成功')

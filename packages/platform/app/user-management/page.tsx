@@ -1,6 +1,6 @@
 'use client'
 
-import { DeleteOutlined, EditOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons'
+import { DeleteOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
@@ -121,8 +121,8 @@ export default function UserManagementPage() {
 			render: (_: unknown, record: User) => (
 				<Space>
 					<Button
-						type="text"
-						icon={<EditOutlined />}
+						className={'!px-0'}
+						type="link"
 						onClick={() => handleEdit(record)}
 					>
 						编辑
@@ -160,6 +160,7 @@ export default function UserManagementPage() {
 				<Button
 					type="primary"
 					icon={<PlusOutlined />}
+					className={'leading-none'}
 					onClick={handleAdd}
 				>
 					添加用户
