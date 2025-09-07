@@ -1,7 +1,7 @@
 'use client'
 
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons'
-import { Button, message, Popconfirm, Space, Table, TableColumnsType } from 'antd'
+import { Button, message, Popconfirm, Space, Table, TableColumnsType, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
 import { useEffect, useState } from 'react'
 
@@ -12,6 +12,7 @@ interface Role {
 	name: string
 	code: string
 	remark: string
+	apps: { id: string; name: string }[]
 	createdAt: string
 	updatedAt: string
 }
@@ -113,6 +114,21 @@ export default function RoleManagementPage() {
 		{
 			title: '角色描述',
 			dataIndex: 'remark',
+		},
+		{
+			title: '已分配应用',
+			dataIndex: 'apps',
+			render: (_: unknown, record) => {
+				return (
+					<>
+						{record.apps.map(app => (
+							<div key={app.id}>
+								<Tag>{app.name}</Tag>
+							</div>
+						))}
+					</>
+				)
+			},
 		},
 		{
 			title: '创建时间',

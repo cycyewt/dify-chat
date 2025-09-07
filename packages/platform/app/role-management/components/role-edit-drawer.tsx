@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Drawer, Form, Input, message, Space } from 'antd'
+import { Button, Drawer, Form, Input, message, Select, Space } from 'antd'
 import { useEffect, useState } from 'react'
 
 interface Role {
@@ -8,8 +8,15 @@ interface Role {
 	name: string
 	code: string
 	remark: string
+	apps: { id: string; name: string }[]
 	createdAt: string
 	updatedAt: string
+}
+
+interface RoleApp {
+	id: string
+	name: string
+	description: string
 }
 
 interface RoleEditDrawerProps {
@@ -23,6 +30,7 @@ interface RoleFormData {
 	name: string
 	code: string
 	remark: string
+	apps: string[]
 }
 
 export default function RoleEditDrawer({
@@ -34,6 +42,7 @@ export default function RoleEditDrawer({
 	const [form] = Form.useForm<RoleFormData>()
 	const [loading, setLoading] = useState(false)
 	const isEditing = !!role
+	const [roleApps, setRoleApps] = useState<RoleApp[]>([])
 
 	useEffect(() => {
 		if (visible) {
@@ -43,12 +52,39 @@ export default function RoleEditDrawer({
 					name: role.name || '',
 					code: role.code || '',
 					remark: role.remark || '',
+					apps: role.apps.map(app => app.id) || [],
 				})
 			} else {
 				form.resetFields()
 			}
 		}
 	}, [visible, role, form])
+
+	const fetchRoleApps = async () => {
+		try {
+			const response = await fetch('/api/apps/simple')
+			if (response.ok) {
+				const data = await response.json()
+				setRoleApps(data)
+			} else {
+				message.open({
+					type: 'error',
+					content: '获取应用列表失败',
+				})
+			}
+		} catch (error) {
+			console.error('获取应用列表时发生错误', error)
+			message.open({
+				type: 'error',
+				content: '获取应用列表时发生错误',
+			})
+		}
+	}
+	useEffect(() => {
+		if (visible) {
+			fetchRoleApps()
+		}
+	}, [visible])
 
 	const handleSubmit = async (values: RoleFormData) => {
 		setLoading(true)
@@ -157,6 +193,29 @@ export default function RoleEditDrawer({
 						allowClear
 						placeholder="请输入角色描述"
 					/>
+				</Form.Item>
+
+				<Form.Item
+					name="apps"
+					label="分配应用"
+				>
+					<Select
+						mode="multiple"
+						placeholder="选择已配置的 Dify 应用"
+						showSearch
+						optionFilterProp="name"
+						allowClear
+					>
+						{roleApps.map(app => (
+							<Select.Option
+								key={app.id}
+								value={app.id}
+								name={app.name}
+							>
+								{app.name}
+							</Select.Option>
+						))}
+					</Select>
 				</Form.Item>
 			</Form>
 		</Drawer>

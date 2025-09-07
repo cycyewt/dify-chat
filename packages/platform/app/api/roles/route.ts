@@ -28,7 +28,41 @@ export async function GET() {
 			},
 		})
 
-		return NextResponse.json(roles)
+		const roleIds = roles.map(role => role.id)
+		const roleDifyApps = await prisma.roleDifyApp.findMany({
+			where: {
+				roleId: {
+					in: roleIds,
+				},
+			},
+			select: {
+				roleId: true,
+				difyAppId: true,
+			},
+		})
+		const difyApps = await prisma.difyApp.findMany({
+			where: {
+				id: {
+					in: roleDifyApps.map(roleDifyApp => roleDifyApp.difyAppId),
+				},
+			},
+			select: {
+				id: true,
+				name: true,
+			},
+		})
+		const results = roles.map(role => {
+			return {
+				...role,
+				apps: difyApps.filter(difyApp =>
+					roleDifyApps.some(
+						roleDifyApp => roleDifyApp.roleId === role.id && roleDifyApp.difyAppId === difyApp.id,
+					),
+				),
+			}
+		})
+
+		return NextResponse.json(results)
 	} catch (error) {
 		console.error('获取角色列表失败:', error)
 		return NextResponse.json({ message: '服务器错误' }, { status: 500 })
@@ -44,7 +78,7 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ message: '未授权' }, { status: 401 })
 		}
 
-		const { name, code, remark } = await request.json()
+		const { name, code, remark, apps } = await request.json()
 
 		if (!name || !code || !remark) {
 			return NextResponse.json({ message: '名称、编码和描述都是必填项' }, { status: 400 })
@@ -53,14 +87,13 @@ export async function POST(request: NextRequest) {
 		// 检查账号是否已存在
 		const existingRole = await prisma.role.findUnique({
 			where: {
-				name,
 				code,
 				isDeleted: false,
 			},
 		})
 
 		if (existingRole) {
-			return NextResponse.json({ message: '该账号已被使用' }, { status: 400 })
+			return NextResponse.json({ message: '该角色已存在' }, { status: 400 })
 		}
 
 		// 新增用户
@@ -79,6 +112,16 @@ export async function POST(request: NextRequest) {
 				updatedAt: true,
 			},
 		})
+
+		// 关联应用
+		if (apps?.length > 0) {
+			await prisma.roleDifyApp.createMany({
+				data: apps.map((appId: string) => ({
+					roleId: role.id,
+					difyAppId: appId,
+				})),
+			})
+		}
 
 		return NextResponse.json(role, { status: 201 })
 	} catch (error) {

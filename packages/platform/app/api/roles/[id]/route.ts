@@ -1,4 +1,3 @@
-import bcrypt from 'bcryptjs'
 import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -22,7 +21,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
 		let { id } = await params
 		id = Number(id)
-		const { name, remark } = await request.json()
+		const { name, remark, apps } = await request.json()
 
 		if (!name || !remark) {
 			return NextResponse.json({ message: '名称和描述都是必填项' }, { status: 400 })
@@ -57,6 +56,24 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 			},
 		})
 
+		// 关联应用
+		if (apps?.length > 0) {
+			// 先删除旧关联
+			await prisma.roleDifyApp.deleteMany({
+				where: {
+					roleId: role.id,
+				},
+			})
+
+			// 创建新关联
+			await prisma.roleDifyApp.createMany({
+				data: apps.map((appId: string) => ({
+					roleId: role.id,
+					difyAppId: appId,
+				})),
+			})
+		}
+
 		return NextResponse.json(role)
 	} catch (error) {
 		console.error('更新角色失败:', error)
@@ -85,7 +102,7 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
 			return NextResponse.json({ message: '角色不存在' }, { status: 404 })
 		}
 
-		// TODO 检查角色下应用数量
+		// TODO 检查角色关联的用户数量
 
 		// 直接删除角色（不再需要删除相关的会话和账户）
 		await prisma.role.delete({
