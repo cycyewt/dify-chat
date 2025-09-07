@@ -10,7 +10,7 @@ import { useState } from 'react'
 import LogoIcon from '@/assets/images/logo.png'
 
 interface LoginForm {
-	email: string
+	sn: string
 	password: string
 }
 
@@ -22,7 +22,7 @@ export default function LoginPage() {
 		setLoading(true)
 		try {
 			const result = await signIn('credentials', {
-				email: values.email,
+				sn: values.sn,
 				password: values.password,
 				redirect: false,
 			})
@@ -30,12 +30,12 @@ export default function LoginPage() {
 			if (result?.error) {
 				message.open({
 					type: 'error',
-					content: '登录失败，请检查邮箱和密码'
+					content: '登录失败，请检查账号和密码',
 				})
 			} else {
 				message.open({
 					type: 'success',
-					content: '登录成功'
+					content: '登录成功',
 				})
 				// 获取会话信息并跳转
 				const session = await getSession()
@@ -47,7 +47,7 @@ export default function LoginPage() {
 			console.error('登录过程中发生错误', error)
 			message.open({
 				type: 'error',
-				content: '登录过程中发生错误'
+				content: '登录过程中发生错误',
 			})
 		} finally {
 			setLoading(false)
@@ -77,15 +77,24 @@ export default function LoginPage() {
 					size="large"
 				>
 					<Form.Item
-						name="email"
+						name="sn"
 						rules={[
-							{ required: true, message: '请输入邮箱地址' },
-							{ type: 'email', message: '请输入有效的邮箱地址' },
+							{
+								validator: (rule, value) => {
+									if (/^\d{6,7}$/.test(value)) {
+										return Promise.resolve()
+									}
+
+									return Promise.reject()
+								},
+								message: '请输入有效的账号',
+							},
 						]}
 					>
 						<Input
 							prefix={<UserOutlined />}
-							placeholder="邮箱地址"
+							placeholder="账号"
+							allowClear
 						/>
 					</Form.Item>
 
@@ -96,6 +105,7 @@ export default function LoginPage() {
 						<Input.Password
 							prefix={<LockOutlined />}
 							placeholder="密码"
+							allowClear
 						/>
 					</Form.Item>
 

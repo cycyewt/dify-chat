@@ -20,28 +20,38 @@ async function createAdmin() {
 	console.log('=== 创建管理员账户 ===')
 
 	// 获取用户输入
-	const email = await question('请输入管理员邮箱: ')
-	const password = await question('请输入管理员密码: ')
 	const name = await question('请输入管理员姓名: ')
+	const sn = await question('请输入管理员账号: ')
+	const phoneNumber = await question('请输入管理员手机号: ')
+	const agency = await question('请输入管理员单位: ')
+	const password = await question('请输入管理员密码: ')
 
 	// 验证输入
-	if (!email || !password || !name) {
-		console.log('邮箱、密码和姓名都不能为空')
+	if (!name || !sn || !phoneNumber || !password || !agency) {
+		console.log('姓名、账号、手机号、工作单位和密码都不能为空')
 		rl.close()
 		return
 	}
 
-	// 验证邮箱格式
-	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-	if (!emailRegex.test(email)) {
-		console.log('邮箱格式不正确')
+	// 验证账号格式
+	const snRegex = /^\d{6,7}$/
+	if (!snRegex.test(sn)) {
+		console.log('账号格式不正确')
+		rl.close()
+		return
+	}
+
+	// 验证手机号号格式
+	const phoneNumberRegex = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
+	if (!phoneNumberRegex.test(phoneNumber)) {
+		console.log('手机号号格式不正确')
 		rl.close()
 		return
 	}
 
 	// 检查管理员是否已存在
 	const existingUser = await prisma.user.findUnique({
-		where: { email },
+		where: { sn },
 	})
 
 	if (existingUser) {
@@ -56,16 +66,20 @@ async function createAdmin() {
 	// 创建管理员账户
 	const admin = await prisma.user.create({
 		data: {
-			email,
-			password: hashedPassword,
 			name,
+			sn,
+			phoneNumber,
+			agency,
+			password: hashedPassword,
 		},
 	})
 
 	console.log('\n管理员账户创建成功:')
-	console.log(`邮箱: ${admin.email}`)
-	console.log(`密码: ${password}`)
 	console.log(`姓名: ${admin.name}`)
+	console.log(`账号: ${admin.sn}`)
+	console.log(`手机号: ${admin.phoneNumber}`)
+	console.log(`工作单位: ${admin.agency}`)
+	console.log(`密码: ${password}`)
 
 	rl.close()
 }

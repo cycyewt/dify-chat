@@ -70,7 +70,10 @@ export const AppEditDrawer = (props: IAppEditDrawerProps) => {
 			manual: true,
 			onSuccess: () => {
 				onClose?.()
-				message.success('新增应用配置成功')
+				message.open({
+					type: 'success',
+					content: '新增应用配置成功',
+				})
 			},
 		},
 	)
@@ -83,7 +86,10 @@ export const AppEditDrawer = (props: IAppEditDrawerProps) => {
 			manual: true,
 			onSuccess: () => {
 				onClose?.()
-				message.success('编辑应用配置成功')
+				message.open({
+					type: 'success',
+					content: '编辑应用配置成功',
+				})
 			},
 		},
 	)
@@ -155,7 +161,10 @@ export const AppEditDrawer = (props: IAppEditDrawerProps) => {
 								confirmCallback?.()
 							} catch (error) {
 								console.error('保存应用配置失败', error)
-								message.error(`保存应用配置失败: ${error}`)
+								message.open({
+									type: 'error',
+									content: `保存应用配置失败: ${error}`,
+								})
 							} finally {
 								setConfirmBtnLoading(false)
 							}

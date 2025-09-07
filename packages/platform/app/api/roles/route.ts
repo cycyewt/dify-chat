@@ -1,30 +1,25 @@
-import bcrypt from 'bcryptjs'
 import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
 
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-// 获取用户列表
 export async function GET() {
 	try {
 		const session = await getServerSession(authOptions)
-
 		if (!session) {
 			return NextResponse.json({ message: '未授权' }, { status: 401 })
 		}
 
-		const users = await prisma.user.findMany({
+		const roles = await prisma.role.findMany({
 			where: {
 				isDeleted: false,
 			},
 			select: {
 				id: true,
 				name: true,
-				sn: true,
-				phoneNumber: true,
-				agency: true,
-				isEnabled: true,
+				code: true,
+				remark: true,
 				createdAt: true,
 				updatedAt: true,
 			},
@@ -33,14 +28,14 @@ export async function GET() {
 			},
 		})
 
-		return NextResponse.json(users)
+		return NextResponse.json(roles)
 	} catch (error) {
-		console.error('获取用户列表失败:', error)
+		console.error('获取角色列表失败:', error)
 		return NextResponse.json({ message: '服务器错误' }, { status: 500 })
 	}
 }
 
-// 新增用户
+// 新增角色
 export async function POST(request: NextRequest) {
 	try {
 		const session = await getServerSession(authOptions)
@@ -49,54 +44,45 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ message: '未授权' }, { status: 401 })
 		}
 
-		const { name, sn, phoneNumber, agency, password } = await request.json()
+		const { name, code, remark } = await request.json()
 
-		if (!name || !sn || !phoneNumber || !agency || !password) {
-			return NextResponse.json(
-				{ message: '姓名、账号、电话号码、工作单位和密码都是必填项' },
-				{ status: 400 },
-			)
+		if (!name || !code || !remark) {
+			return NextResponse.json({ message: '名称、编码和描述都是必填项' }, { status: 400 })
 		}
 
 		// 检查账号是否已存在
-		const existingUser = await prisma.user.findUnique({
+		const existingRole = await prisma.role.findUnique({
 			where: {
-				sn,
+				name,
+				code,
 				isDeleted: false,
 			},
 		})
 
-		if (existingUser) {
+		if (existingRole) {
 			return NextResponse.json({ message: '该账号已被使用' }, { status: 400 })
 		}
 
-		// 加密密码
-		const hashedPassword = await bcrypt.hash(password, 12)
-
 		// 新增用户
-		const user = await prisma.user.create({
+		const role = await prisma.role.create({
 			data: {
 				name,
-				sn,
-				phoneNumber,
-				agency,
-				password: hashedPassword,
+				code,
+				remark,
 			},
 			select: {
 				id: true,
 				name: true,
-				sn: true,
-				phoneNumber: true,
-				agency: true,
-				isEnabled: true,
+				code: true,
+				remark: true,
 				createdAt: true,
 				updatedAt: true,
 			},
 		})
 
-		return NextResponse.json(user, { status: 201 })
+		return NextResponse.json(role, { status: 201 })
 	} catch (error) {
-		console.error('新增用户失败:', error)
+		console.error('新增角色失败:', error)
 		return NextResponse.json({ message: '服务器错误' }, { status: 500 })
 	}
 }

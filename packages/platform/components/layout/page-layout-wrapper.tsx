@@ -4,6 +4,7 @@ import '@ant-design/v5-patch-for-react-19'
 import { initResponsiveConfig } from '@dify-chat/helpers'
 import { ThemeContextProvider, useThemeContext } from '@dify-chat/theme'
 import { ConfigProvider, theme } from 'antd'
+import zhCN from 'antd/locale/zh_CN'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
@@ -17,6 +18,7 @@ const ThemeContextWrapper = ({ children }: { children: React.ReactNode }) => {
 
 	return (
 		<ConfigProvider
+			locale={zhCN}
 			theme={{
 				algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
 			}}

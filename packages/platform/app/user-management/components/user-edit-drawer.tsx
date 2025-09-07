@@ -5,8 +5,11 @@ import { useEffect, useState } from 'react'
 
 interface User {
 	id: string
-	name: string | null
-	email: string
+	name: string
+	sn: string
+	phoneNumber: string
+	agency: string
+	isEnabled: boolean
 	createdAt: string
 	updatedAt: string
 }
@@ -20,7 +23,9 @@ interface UserEditDrawerProps {
 
 interface UserFormData {
 	name: string
-	email: string
+	sn: string
+	phoneNumber: string
+	agency: string
 	password?: string
 }
 
@@ -37,9 +42,12 @@ export default function UserEditDrawer({
 	useEffect(() => {
 		if (visible) {
 			if (user) {
+				form.resetFields()
 				form.setFieldsValue({
 					name: user.name || '',
-					email: user.email,
+					sn: user.sn || '',
+					phoneNumber: user.phoneNumber || '',
+					agency: user.agency || '',
 				})
 			} else {
 				form.resetFields()
@@ -111,17 +119,76 @@ export default function UserEditDrawer({
 				</Form.Item>
 
 				<Form.Item
-					name="email"
-					label="邮箱"
+					name="sn"
+					label="账号"
+					required
 					rules={[
-						{ required: true, message: '请输入邮箱' },
-						{ type: 'email', message: '请输入有效的邮箱地址' },
+						{
+							validator: (rule, value) => {
+								if (/^\d{6,7}$/.test(value)) {
+									return Promise.resolve()
+								}
+
+								return Promise.reject()
+							},
+							message: '请输入有效的账号',
+						},
 					]}
 				>
-					<Input placeholder="请输入邮箱地址" />
+					<Input
+						placeholder="账号"
+						allowClear
+					/>
 				</Form.Item>
 
-				{!isEditing && (
+				<Form.Item
+					name="phoneNumber"
+					label="手机号码"
+					required
+					rules={[
+						{
+							validator: (rule, value) => {
+								if (/^(?:(?:\+|00)86)?1[3-9]\d{9}$/.test(value)) {
+									return Promise.resolve()
+								}
+
+								return Promise.reject()
+							},
+							message: '请输入有效的手机号码',
+						},
+					]}
+				>
+					<Input
+						placeholder="手机号码"
+						allowClear
+					/>
+				</Form.Item>
+
+				<Form.Item
+					name="agency"
+					label="工作单位"
+					rules={[{ required: true, message: '请输入工作单位' }]}
+				>
+					<Input
+						allowClear
+						placeholder="请输入工作单位"
+					/>
+				</Form.Item>
+
+				{isEditing ? (
+					<Form.Item
+						name="password"
+						label="新密码"
+						help="留空则不修改密码"
+						rules={[{ min: 6, message: '密码至少6位' }]}
+					>
+						<Input.Password
+							allowClear
+							placeholder="新密码"
+							autoComplete="new-password"
+						/>
+					</Form.Item>
+				) : (
 					<Form.Item
 						name="password"
 						label="密码"
@@ -130,18 +197,11 @@ export default function UserEditDrawer({
 							{ min: 6, message: '密码至少6位' },
 						]}
 					>
-						<Input.Password placeholder="请输入密码" />
-					</Form.Item>
-				)}
-
-				{isEditing && (
-					<Form.Item
-						name="password"
-						label="新密码"
-						help="留空则不修改密码"
-						rules={[{ min: 6, message: '密码至少6位' }]}
-					>
-						<Input.Password placeholder="留空则不修改密码" />
+						<Input.Password
+							allowClear
+							placeholder="请输入密码"
+							autoComplete="new-password"
+						/>
 					</Form.Item>
 				)}
 			</Form>

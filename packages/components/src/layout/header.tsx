@@ -1,13 +1,13 @@
-import { UserOutlined } from '@ant-design/icons';
-import { LucideIcon } from '@dify-chat/components';
-import { useIsMobile } from '@dify-chat/helpers';
+import { UserOutlined } from '@ant-design/icons'
+import { LucideIcon } from '@dify-chat/components'
+import { useIsMobile } from '@dify-chat/helpers'
 import { ThemeSelector, useThemeContext } from '@dify-chat/theme'
-import { Button, Dropdown, Space } from 'antd';
-import classNames from 'classnames';
-import React from 'react';
+import { Button, Dropdown, Space } from 'antd'
+import classNames from 'classnames'
+import React from 'react'
 
-import CenterTitleWrapper from './center-title-wrapper';
-import { Logo } from './logo';
+import CenterTitleWrapper from './center-title-wrapper'
+import { Logo } from './logo'
 
 export interface IHeaderLayoutProps {
 	/**
@@ -78,13 +78,7 @@ export default function HeaderLayout(props: IHeaderLayoutProps) {
 						<ThemeSelector>
 							<div className="flex items-center cursor-pointer">
 								<LucideIcon
-									name={
-										themeMode === 'dark'
-											? 'moon'
-											: themeMode === 'light'
-												? 'sun'
-												: ''monitor''
-									}
+									name={themeMode === 'dark' ? 'moon' : themeMode === 'light' ? 'sun' : 'monitor'}
 									size={20}
 								/>
 							</div>

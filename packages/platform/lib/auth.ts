@@ -10,17 +10,18 @@ export const authOptions = {
 		CredentialsProvider({
 			name: 'credentials',
 			credentials: {
-				email: { label: '邮箱', type: 'email' },
+				sn: { label: '账号', type: 'email' },
 				password: { label: '密码', type: 'password' },
 			},
 			async authorize(credentials) {
-				if (!credentials?.email || !credentials?.password) {
+				if (!credentials?.sn || !credentials?.password) {
 					return null
 				}
 
 				const user = await prisma.user.findUnique({
 					where: {
-						email: credentials.email,
+						sn: credentials.sn,
+						isEnabled: true,
 					},
 				})
 
@@ -36,8 +37,11 @@ export const authOptions = {
 
 				return {
 					id: user.id,
-					email: user.email,
 					name: user.name,
+					sn: user.sn,
+					phoneNumber: user.phoneNumber,
+					agency: user.agency,
+					isEnabled: user.isEnabled,
 				}
 			},
 		}),

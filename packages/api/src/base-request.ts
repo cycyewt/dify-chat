@@ -38,7 +38,10 @@ export class XRequest {
 			}
 		}
 		if (result.status === 401) {
-			message.error('未授权, 请检查你的配置')
+			message.open({
+				type: 'error',
+				content: '未授权, 请检查你的配置',
+			})
 			throw new UnauthorizedError('Unauthorized')
 		}
 		return result

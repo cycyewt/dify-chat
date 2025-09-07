@@ -1,95 +1,95 @@
 // MySQL 环境配置模板
 generator client {
-	provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-	provider = "mysql"
-	url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model DifyApp {
-	id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-	// 应用基本信息
-	name        String
-	mode        String?
-	description String?
-	tags        String? // JSON 字符串存储数组
+  // 应用基本信息
+  name        String
+  mode        String?
+  description String?
+  tags        String? // JSON 字符串存储数组
 
-	// 应用状态：1-启用，2-禁用
-	isEnabled Int? @default(1) @map("is_enabled")
+  // 应用状态：1-启用，2-禁用
+  isEnabled Int? @default(1) @map("is_enabled")
 
-	// 请求配置
-	apiBase String @map("api_base")
-	apiKey  String @map("api_key")
+  // 请求配置
+  apiBase String @map("api_base")
+  apiKey  String @map("api_key")
 
-	// 回复表单配置
-	enableAnswerForm       Boolean @default(false) @map("enable_answer_form")
-	answerFormFeedbackText String? @map("answer_form_feedback_text")
+  // 回复表单配置
+  enableAnswerForm       Boolean @default(false) @map("enable_answer_form")
+  answerFormFeedbackText String? @map("answer_form_feedback_text")
 
-	// 输入参数配置
-	enableUpdateInputAfterStarts Boolean @default(false) @map("enable_update_input_after_starts")
+  // 输入参数配置
+  enableUpdateInputAfterStarts Boolean @default(false) @map("enable_update_input_after_starts")
 
-	// 扩展配置
-	openingStatementDisplayMode String? @map("opening_statement_display_mode") // 'default' | 'always'
+  // 扩展配置
+  openingStatementDisplayMode String? @map("opening_statement_display_mode") // 'default' | 'always'
 
-	deleted   Int      @db.UnsignedTinyInt @default(0) // 删除状态：1-删除，0-正常
-	createdAt DateTime @default(now()) @map("created_at")
-	updatedAt DateTime @updatedAt @map("updated_at")
+  deleted   Int      @default(0) @db.UnsignedTinyInt // 删除状态：1-删除，0-正常
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-	@@map("dify_apps")
+  @@map("dify_apps")
 }
 
 // 角色表 - 用户角色
 model Role {
-	id        Int      @id @default(autoincrement())
-	name      String
-	code      String   @unique // 角色字符串
-	remark    String // 手机号
-	deleted   Int      @db.UnsignedTinyInt @default(0) // 删除状态：1-删除，0-正常
-	createdAt DateTime @default(now()) @map("created_at")
-	updatedAt DateTime @updatedAt @map("updated_at")
+  id        Int      @id @default(autoincrement())
+  name      String
+  code      String   @unique // 角色字符串
+  remark    String // 手机号
+  deleted   Int      @default(0) @db.UnsignedTinyInt // 删除状态：1-删除，0-正常
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-	@@map("roles")
+  @@map("roles")
 }
 
 // 角色权限表
 model RoleDifyApp {
-	id        Int      @id @default(autoincrement())
-	roleId    Int
-	difyAppId Int
-	deleted   Int      @db.UnsignedTinyInt @default(0) // 删除状态：1-删除，0-正常
-	createdAt DateTime @default(now()) @map("created_at")
-	updatedAt DateTime @updatedAt @map("updated_at")
+  id        Int      @id @default(autoincrement())
+  roleId    Int
+  difyAppId Int
+  deleted   Int      @default(0) @db.UnsignedTinyInt // 删除状态：1-删除，0-正常
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-	@@map("role_dify_apps")
+  @@map("role_dify_apps")
 }
 
 // 用户表 - 后台管理员和普通用户账户
 model User {
-	id          Int      @id @default(autoincrement())
-	name        String
-	no          String   @unique // 警号/编号
-	phoneNumber String   @unique @map("phone_number") // 手机号
-	agency      String // 工作单位
-	password    String // 密码哈希
-	status      Int      @db.UnsignedTinyInt @default(1) // 状态：1-正常，0-禁用
-	deleted     Int      @db.UnsignedTinyInt @default(0) // 删除状态：1-删除，0-正常
-	createdAt   DateTime @default(now()) @map("created_at")
-	updatedAt   DateTime @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())
+  name        String
+  sn          String   @unique // 账号
+  phoneNumber String   @unique @map("phone_number") // 手机号
+  agency      String // 工作单位
+  password    String // 密码哈希
+  status      Int      @default(1) @db.UnsignedTinyInt // 状态：1-正常，0-禁用
+  deleted     Int      @default(0) @db.UnsignedTinyInt // 删除状态：1-删除，0-正常
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-	@@map("users")
-	@@index([no, phoneNumber])
+  @@index([sn, phoneNumber])
+  @@map("users")
 }
 
 model UserRole {
-	id        Int      @id @default(autoincrement())
-	userId    Int
-	roleId    Int
-	deleted   Int      @db.UnsignedTinyInt @default(0) // 删除状态：1-删除，0-正常
-	createdAt DateTime @default(now()) @map("created_at")
-	updatedAt DateTime @updatedAt @map("updated_at")
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  roleId    Int
+  deleted   Int      @default(0) @db.UnsignedTinyInt // 删除状态：1-删除，0-正常
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-	@@map("user_roles")
+  @@map("user_roles")
 }

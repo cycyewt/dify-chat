@@ -21,6 +21,7 @@
 		"@changesets/cli": "catalog:",
 		"@eslint/compat": "catalog:",
 		"@eslint/js": "catalog:",
+		"@next/eslint-plugin-next": "catalog:",
 		"@trivago/prettier-plugin-sort-imports": "catalog:",
 		"eslint": "catalog:",
 		"eslint-plugin-react": "catalog:",

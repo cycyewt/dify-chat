@@ -7,7 +7,7 @@ import { prisma } from '@/lib/prisma'
 
 interface RouteParams {
 	params: Promise<{
-		id: string
+		id: number
 	}>
 }
 
@@ -20,11 +20,15 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 			return NextResponse.json({ message: '未授权' }, { status: 401 })
 		}
 
-		const { id } = await params
-		const { name, email, password } = await request.json()
+		let { id } = await params
+		id = Number(id)
+		const { name, sn, phoneNumber, agency, password } = await request.json()
 
-		if (!name || !email) {
-			return NextResponse.json({ message: '姓名和邮箱都是必填项' }, { status: 400 })
+		if (!name || !sn || !phoneNumber || !agency) {
+			return NextResponse.json(
+				{ message: '姓名、账号、电话号码、工作单位和密码都是必填项' },
+				{ status: 400 },
+			)
 		}
 
 		// 检查用户是否存在
@@ -37,18 +41,20 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 		}
 
 		// 检查邮箱是否被其他用户使用
-		const emailUser = await prisma.user.findUnique({
-			where: { email },
+		const snUser = await prisma.user.findUnique({
+			where: { sn },
 		})
 
-		if (emailUser && emailUser.id !== id) {
-			return NextResponse.json({ message: '该邮箱已被其他用户使用' }, { status: 400 })
+		if (snUser && snUser.id !== id) {
+			return NextResponse.json({ message: '该账号已被其他用户使用' }, { status: 400 })
 		}
 
 		// 准备更新数据
 		const updateData = {
 			name,
-			email,
+			sn,
+			phoneNumber,
+			agency,
 			password: '',
 		}
 
@@ -64,7 +70,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 			select: {
 				id: true,
 				name: true,
-				email: true,
+				sn: true,
+				phoneNumber: true,
+				agency: true,
 				createdAt: true,
 				updatedAt: true,
 			},
@@ -80,13 +88,14 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // 删除用户
 export async function DELETE(_request: NextRequest, { params }: RouteParams) {
 	try {
-		const session = (await getServerSession(authOptions)) as { user: { id: string } }
+		const session = (await getServerSession(authOptions)) as { user: { id: number } }
 
 		if (!session) {
 			return NextResponse.json({ message: '未授权' }, { status: 401 })
 		}
 
-		const { id } = await params
+		let { id } = await params
+		id = Number(id)
 
 		// 检查是否尝试删除自己
 		if (session.user?.id === id) {

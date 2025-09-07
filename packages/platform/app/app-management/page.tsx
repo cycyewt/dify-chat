@@ -1,5 +1,6 @@
 'use client'
 
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons'
 import { DifyApi } from '@dify-chat/api'
 import { AppModeEnums, IDifyAppItem } from '@dify-chat/core'
 import { AppModeNames } from '@dify-chat/core'
@@ -13,7 +14,6 @@ import { addApp } from '@/repository/app'
 import { deleteApp, getApp, listApp, updateApp } from './actions'
 import { AppEditDrawer } from './components/app-edit-drawer'
 import { AppDetailDrawerModeEnum } from './enums'
-import { PlusOutlined } from '@ant-design/icons'
 
 export default function AppManagementPage() {
 	const [appEditDrawerOpen, setAppEditDrawerOpen] = useState(false)
@@ -41,27 +41,40 @@ export default function AppManagementPage() {
 		<div className="mx-auto px-4 w-full 2xl:!w-3/4 h-full">
 			<div className="flex justify-between items-end mb-6">
 				<div>
-					<Title level={3} className={'!mb-0'}>应用管理</Title>
+					<Title
+						level={3}
+						className={'!mb-0'}
+					>
+						应用管理
+					</Title>
 					<p className="mt-1 text-gray-600">管理 Dify 中配置的应用</p>
 				</div>
-				<Button
-					type="primary"
-					icon={<PlusOutlined />}
-					className={'leading-none'}
-					onClick={() => {
-						setAppEditDrawerMode(AppDetailDrawerModeEnum.create)
-						setAppEditDrawerOpen(true)
-						setAppEditDrawerAppItem(undefined)
-					}}
-				>
-					添加应用
-				</Button>
+				<Space>
+					<Button
+						icon={<ReloadOutlined />}
+						onClick={getAppList}
+					>
+						刷新
+					</Button>
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
+						className={'leading-none'}
+						onClick={() => {
+							setAppEditDrawerMode(AppDetailDrawerModeEnum.create)
+							setAppEditDrawerOpen(true)
+							setAppEditDrawerAppItem(undefined)
+						}}
+					>
+						添加应用
+					</Button>
+				</Space>
 			</div>
 
 			<Table
 				size={'small'}
 				dataSource={list}
-				rowKey='id'
+				rowKey="id"
 				loading={listLoading}
 				scroll={{ x: 1200 }}
 				columns={[
