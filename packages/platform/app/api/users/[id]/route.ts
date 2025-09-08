@@ -22,7 +22,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
 		let { id } = await params
 		id = Number(id)
-		const { name, sn, phoneNumber, agency, password } = await request.json()
+		const { name, sn, phoneNumber, agency, password, roles } = await request.json()
 
 		if (!name || !sn || !phoneNumber || !agency) {
 			return NextResponse.json(
@@ -77,6 +77,20 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 				updatedAt: true,
 			},
 		})
+
+		if (roles?.length > 0) {
+			await prisma.userRole.deleteMany({
+				where: {
+					userId: id,
+				},
+			})
+			await prisma.userRole.createMany({
+				data: roles.map((roleId: number) => ({
+					userId: id,
+					roleId,
+				})),
+			})
+		}
 
 		return NextResponse.json(user)
 	} catch (error) {

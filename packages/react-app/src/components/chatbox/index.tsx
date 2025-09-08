@@ -307,7 +307,7 @@ export const Chatbox = (props: ChatboxProps) => {
 							flexDirection: 'column-reverse',
 						}}
 					>
-						<div className="flex-1 w-full md:!w-3/4 mx-auto px-3 md:px-0 box-border">
+						<div className="flex-1 w-full md:!w-4/5 lg:!w-3/4 xl:!w-3/5 mx-auto px-3 md:px-0 box-border">
 							{/* 🌟 消息列表 */}
 							<Bubble.List
 								items={items}
@@ -354,13 +354,13 @@ export const Chatbox = (props: ChatboxProps) => {
 					</InfiniteScroll>
 				</div>
 				<div
-					className="absolute bottom-0 bg-theme-main-bg w-full md:!w-3/4 left-1/2"
+					className="absolute bottom-0 bg-theme-main-bg w-full md:!w-4/5 lg:!w-3/4 xl:!w-3/5  left-1/2"
 					style={{
 						transform: 'translateX(-50%)',
 					}}
 				>
 					{/* 🌟 输入框 */}
-					<div className="px-3">
+					<div className="px-11">
 						<MessageSender
 							onSubmit={async (...params) => {
 								return validateAndGenErrMsgs(entryForm).then(res => {

@@ -162,7 +162,10 @@ export default function AppManagementPage() {
 									onClick={async () => {
 										const appItem = await getApp(record.id)
 										if (!appItem) {
-											message.error('应用不存在')
+											message.open({
+												type: 'error',
+												content: '应用不存在',
+											})
 											return
 										}
 										const { info: originalInfo, ...rest } = appItem!
@@ -181,10 +184,16 @@ export default function AppManagementPage() {
 													...appInfo,
 												},
 											})
-											message.success('同步应用成功')
+											message.open({
+												type: 'success',
+												content: '同步应用成功',
+											})
 											getAppList()
 										} catch (error) {
-											message.error('同步应用失败')
+											message.open({
+												type: 'error',
+												content: '同步应用失败',
+											})
 											console.error(error)
 										}
 									}}
@@ -198,7 +207,10 @@ export default function AppManagementPage() {
 									cancelText="取消"
 									onConfirm={async () => {
 										await deleteApp(record.id)
-										message.success('删除应用成功')
+										message.open({
+											type: 'success',
+											content: '删除应用成功',
+										})
 										getAppList()
 									}}
 								>

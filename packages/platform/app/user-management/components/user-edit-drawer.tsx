@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Drawer, Form, Input, message, Space } from 'antd'
+import { Button, Drawer, Form, Input, message, Select, Space } from 'antd'
 import { useEffect, useState } from 'react'
 
 interface User {
@@ -10,8 +10,15 @@ interface User {
 	phoneNumber: string
 	agency: string
 	isEnabled: boolean
+	roles: { id: number; name: string; remark: string }[]
 	createdAt: string
 	updatedAt: string
+}
+
+interface UserRole {
+	id: number
+	name: string
+	remark: string
 }
 
 interface UserEditDrawerProps {
@@ -27,6 +34,7 @@ interface UserFormData {
 	phoneNumber: string
 	agency: string
 	password?: string
+	roles: number[]
 }
 
 export default function UserEditDrawer({
@@ -38,6 +46,7 @@ export default function UserEditDrawer({
 	const [form] = Form.useForm()
 	const [loading, setLoading] = useState(false)
 	const isEditing = !!user
+	const [userRoles, setUserRoles] = useState<UserRole[]>([])
 
 	useEffect(() => {
 		if (visible) {
@@ -48,12 +57,38 @@ export default function UserEditDrawer({
 					sn: user.sn || '',
 					phoneNumber: user.phoneNumber || '',
 					agency: user.agency || '',
+					roles: user.roles.map(role => role.id),
 				})
 			} else {
 				form.resetFields()
 			}
 		}
 	}, [visible, user, form])
+	const fetchUserRoles = async () => {
+		try {
+			const response = await fetch('/api/roles/simple')
+			if (response.ok) {
+				const data = await response.json()
+				setUserRoles(data)
+			} else {
+				message.open({
+					type: 'error',
+					content: '获取角色列表失败',
+				})
+			}
+		} catch (error) {
+			console.error('获取角色列表时发生错误', error)
+			message.open({
+				type: 'error',
+				content: '获取角色列表时发生错误',
+			})
+		}
+	}
+	useEffect(() => {
+		if (visible) {
+			fetchUserRoles()
+		}
+	}, [visible])
 
 	const handleSubmit = async (values: UserFormData) => {
 		setLoading(true)
@@ -70,15 +105,24 @@ export default function UserEditDrawer({
 			})
 
 			if (response.ok) {
-				message.success(isEditing ? '更新用户成功' : '添加用户成功')
+				message.open({
+					type: 'success',
+					content: isEditing ? '更新用户成功' : '添加用户成功',
+				})
 				onSaveSuccess()
 			} else {
 				const error = await response.json()
-				message.error(error.message || '操作失败')
+				message.open({
+					type: 'error',
+					content: error.message || '操作失败',
+				})
 			}
 		} catch (error) {
 			console.error('操作时发生错误', error)
-			message.error('操作时发生错误')
+			message.open({
+				type: 'error',
+				content: '操作时发生错误',
+			})
 		} finally {
 			setLoading(false)
 		}
@@ -179,7 +223,7 @@ export default function UserEditDrawer({
 					<Form.Item
 						name="password"
 						label="新密码"
-						help="留空则不修改密码"
+						extra="留空则不修改密码"
 						rules={[{ min: 6, message: '密码至少6位' }]}
 					>
 						<Input.Password
@@ -204,6 +248,29 @@ export default function UserEditDrawer({
 						/>
 					</Form.Item>
 				)}
+
+				<Form.Item
+					name="roles"
+					label="分配角色"
+				>
+					<Select
+						mode="multiple"
+						placeholder="选择已配置的用户角色"
+						showSearch
+						optionFilterProp="name"
+						allowClear
+					>
+						{userRoles.map(role => (
+							<Select.Option
+								key={role.id}
+								value={role.id}
+								name={role.name}
+							>
+								{role.name}
+							</Select.Option>
+						))}
+					</Select>
+				</Form.Item>
 			</Form>
 		</Drawer>
 	)

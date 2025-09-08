@@ -63,8 +63,8 @@ model Role {
 // 角色权限表
 model RoleDifyApp {
   id        Int      @id @default(autoincrement())
-  roleId    Int
-  difyAppId String
+  roleId    Int      @map("role_id")
+  difyAppId String   @map("dify_app_id")
   // 删除状态
   isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at")
@@ -99,8 +99,8 @@ model User {
 
 model UserRole {
   id        Int      @id @default(autoincrement())
-  userId    Int
-  roleId    Int
+  userId    Int      @map("user_id")
+  roleId    Int      @map("role_id")
   // 删除状态
   isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at")

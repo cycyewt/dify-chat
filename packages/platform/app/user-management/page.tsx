@@ -15,6 +15,7 @@ interface User {
 	phoneNumber: string
 	agency: string
 	isEnabled: boolean
+	roles: { id: number; name: string; remark: string }[]
 	createdAt: string
 	updatedAt: string
 }
@@ -124,6 +125,21 @@ export default function UserManagementPage() {
 			title: '工作单位',
 			dataIndex: 'agency',
 			width: 220,
+		},
+		{
+			title: '已分配角色',
+			dataIndex: 'roles',
+			render: (_: unknown, record) => {
+				return (
+					<>
+						{record.roles.map(role => (
+							<div key={role.id}>
+								<Tag>{role.name}</Tag>
+							</div>
+						))}
+					</>
+				)
+			},
 		},
 		{
 			title: '状态',
