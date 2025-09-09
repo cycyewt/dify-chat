@@ -11,7 +11,7 @@ import { IDifyAppItem } from '@/types'
  */
 export const getAppList = async (userId?: number): Promise<IDifyAppItem[]> => {
 	try {
-		let dbApps: Prisma.DifyAppSelect[]
+		let dbApps
 		if (userId) {
 			const userRoles = await prisma.userRole.findMany({
 				where: {
@@ -22,13 +22,6 @@ export const getAppList = async (userId?: number): Promise<IDifyAppItem[]> => {
 				},
 			})
 			const roleIds = userRoles.map(role => role.roleId)
-			const roles = await prisma.role.findMany({
-				where: {
-					id: {
-						in: roleIds,
-					},
-				},
-			})
 			const roleDifyApps = await prisma.roleDifyApp.findMany({
 				where: {
 					roleId: {
@@ -47,6 +40,7 @@ export const getAppList = async (userId?: number): Promise<IDifyAppItem[]> => {
 					},
 				},
 			})
+			return dbApps.map(dbAppToAppItem)
 		} else {
 			dbApps = await prisma.difyApp.findMany({
 				orderBy: {
@@ -54,6 +48,7 @@ export const getAppList = async (userId?: number): Promise<IDifyAppItem[]> => {
 				},
 			})
 		}
+
 		return dbApps.map(dbAppToAppItem)
 	} catch (error) {
 		console.error('Error fetching app list:', error)

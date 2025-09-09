@@ -1,12 +1,15 @@
 declare module 'next-auth' {
 	interface User {
 		id: string
+		name: string
+		sn: string
 	}
 
 	interface Session {
 		user: {
 			id: string
-			name: string | null
+			name: string
+			sn: string
 		}
 	}
 }

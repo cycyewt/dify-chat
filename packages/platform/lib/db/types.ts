@@ -35,6 +35,7 @@ export function dbAppToAppItem(dbApp: DifyApp): IDifyAppItem {
 				},
 			},
 		},
+		isDeleted: dbApp.isDeleted,
 	}
 }
 
@@ -57,6 +58,7 @@ export function appItemToDbApp(
 		enableUpdateInputAfterStarts: appItem.inputParams?.enableUpdateAfterCvstStarts || false,
 		openingStatementDisplayMode:
 			appItem.extConfig?.conversation?.openingStatement?.displayMode || null,
+		isDeleted: appItem.isDeleted || false,
 	}
 }
 

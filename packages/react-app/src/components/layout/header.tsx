@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import React from 'react'
 
 import { LucideIcon } from '@/components'
+import { useAuth } from '@/hooks/use-auth.ts'
 
 import CenterTitleWrapper from './center-title-wrapper'
 import { Logo } from './logo'
@@ -55,6 +56,7 @@ const HeaderSiderIcon = (props: { align: 'left' | 'right'; children: React.React
  */
 export default function HeaderLayout(props: IHeaderLayoutProps) {
 	const { isTitleWrapped, title, titleAddon, rightIcon, logoText, renderLogo } = props
+	const { isAuthorized, userInfo } = useAuth()
 	const { themeMode } = useThemeContext()
 	const isMobile = useIsMobile()
 	return (

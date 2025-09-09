@@ -14,6 +14,7 @@ import { getAppList } from '@/repository/app'
  */
 export async function GET() {
 	const session = await getServerSession(authOptions)
+	await new Promise(resolve => setTimeout(resolve, 1000))
 
 	try {
 		const apps = await getAppList(session ? (session.user.id as number) : undefined)

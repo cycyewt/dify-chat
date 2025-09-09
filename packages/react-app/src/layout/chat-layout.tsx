@@ -75,7 +75,7 @@ export default function ChatLayout(props: IChatLayoutProps) {
 
 	// 创建 Dify API 实例
 	const searchParams = useSearchParams()
-	const [conversationListLoading, setCoversationListLoading] = useState<boolean>(false)
+	const [conversationListLoading, setConversationListLoading] = useState<boolean>(false)
 	const latestCurrentConversationId = useLatest(currentConversationId)
 
 	useEffect(() => {
@@ -97,7 +97,7 @@ export default function ChatLayout(props: IChatLayoutProps) {
 	 */
 	const getConversationItems = async (showLoading = true) => {
 		if (showLoading) {
-			setCoversationListLoading(true)
+			setConversationListLoading(true)
 		}
 		try {
 			const result = await difyApi?.listConversations()
@@ -121,7 +121,7 @@ export default function ChatLayout(props: IChatLayoutProps) {
 			console.error(error)
 			message.error(`获取会话列表失败: ${error}`)
 		} finally {
-			setCoversationListLoading(false)
+			setConversationListLoading(false)
 		}
 	}
 

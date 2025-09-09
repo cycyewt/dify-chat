@@ -11,19 +11,20 @@ export interface ISession {
 	}
 }
 
-export const getCsrfToken = async () => {
-	const response = await fetch('http://localhost:5300/api/auth/csrf')
+const API_BASE = process.env.PUBLIC_AUTH_API_BASE
+
+export const getCsrfTokenApi = async () => {
+	const response = await fetch(`${API_BASE}/csrf`)
 	const result = (await response.json()) as { csrfToken: string }
 	return result.csrfToken
 }
 
-export const login = async (credentials: ICredentials) => {
-	const response = await fetch('http://localhost:5300/api/auth/callback/credentials', {
+export const loginApi = async (credentials: ICredentials) => {
+	const response = await fetch(`${API_BASE}/callback/credentials`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 		body: new URLSearchParams({
 			...credentials,
-			// csrfToken: await getCsrfToken(),
 			json: 'true',
 			redirect: 'false',
 		}),
@@ -32,17 +33,17 @@ export const login = async (credentials: ICredentials) => {
 	return response.json()
 }
 
-export const getSession = async () => {
-	const response = await fetch('http://localhost:5300/api/auth/session', {
+export const getSessionApi = async () => {
+	const response = await fetch(`${API_BASE}/session`, {
 		credentials: 'include',
 	})
 
 	return (await response.json()) as ISession
 }
 
-export const logout = async () => {
-	const csrfToken = await getCsrfToken()
-	await fetch('https://your-auth-service.com/api/auth/signout', {
+export const logoutApi = async () => {
+	const csrfToken = await getCsrfTokenApi()
+	await fetch(`${API_BASE}/signout`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 		body: new URLSearchParams({ csrfToken, json: 'true' }),
