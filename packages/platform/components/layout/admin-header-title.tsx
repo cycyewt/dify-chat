@@ -1,6 +1,12 @@
 'use client'
 
-import { AppstoreOutlined, LogoutOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons'
+import {
+	ApartmentOutlined,
+	AppstoreOutlined,
+	LogoutOutlined,
+	TeamOutlined,
+	UserOutlined,
+} from '@ant-design/icons'
 import { Button, Dropdown, message, Segmented, Space } from 'antd'
 import { signOut, useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
@@ -28,13 +34,13 @@ const TopMenuOptions: ITopMenuOption[] = [
 	},
 	{
 		label: '角色管理',
-		icon: <TeamOutlined />,
+		icon: <ApartmentOutlined />,
 		value: ETopMenuKeys.RoleManagement,
 		route: '/role-management',
 	},
 	{
 		label: '用户管理',
-		icon: <UserOutlined />,
+		icon: <TeamOutlined />,
 		value: ETopMenuKeys.UserManagement,
 		route: '/user-management',
 	},

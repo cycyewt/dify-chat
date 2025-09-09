@@ -103,6 +103,14 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
 		}
 
 		// TODO 检查角色关联的用户数量
+		const userCount = await prisma.userRole.count({
+			where: {
+				roleId: id,
+			},
+		})
+		if (userCount > 0) {
+			return NextResponse.json({ message: '该角色关联了用户，请先解除关联关系' }, { status: 400 })
+		}
 
 		// 直接删除角色（不再需要删除相关的会话和账户）
 		await prisma.role.delete({

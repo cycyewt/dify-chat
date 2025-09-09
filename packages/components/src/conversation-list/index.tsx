@@ -73,7 +73,10 @@ export const ConversationList = (props: IConversationListProps) => {
 				await renameForm.validateFields()
 				const values = await renameForm.validateFields()
 				await renameConversationPromise(conversation.key, values.name)
-				message.success('对话重命名成功')
+				message.open({
+					type: 'success',
+					content: '对话重命名成功',
+				})
 			},
 		})
 	}

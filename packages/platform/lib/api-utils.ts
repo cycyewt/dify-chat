@@ -91,6 +91,10 @@ export async function createFormDataProxy(request: NextRequest) {
  * 统一的 Dify API 响应格式
  */
 export function createDifyApiResponse<T>(data: T, status = 200) {
+	if (data === null) {
+		return NextResponse.json(null, { status: 200 })
+	}
+
 	return NextResponse.json(
 		{
 			code: status,

@@ -21,9 +21,9 @@
 ### 会话管理相关 (4个)
 
 9. `GET /api/client/dify/{appId}/conversations` - 获取会话列表 (已存在)
-10. `GET /api/client/dify/{appId}/conversation/{conversationId}/messages` - 获取会话消息历史 (已存在)
-11. `DELETE /api/client/dify/{appId}/conversation/{conversationId}` - 删除会话
-12. `PUT /api/client/dify/{appId}/conversation/{conversationId}/name` - 重命名会话
+10. `GET /api/client/dify/{appId}/conversations/{conversationId}/messages` - 获取会话消息历史 (已存在)
+11. `DELETE /api/client/dify/{appId}/conversations/{conversationId}` - 删除会话
+12. `PUT /api/client/dify/{appId}/conversations/{conversationId}/name` - 重命名会话
 
 ### 文件和媒体相关 (3个)
 

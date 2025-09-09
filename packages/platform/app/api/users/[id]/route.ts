@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
@@ -50,12 +51,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 		}
 
 		// 准备更新数据
-		const updateData = {
+		const updateData: Partial<Prisma.UserUpdateInput> = {
 			name,
 			sn,
 			phoneNumber,
 			agency,
-			password: '',
 		}
 
 		// 如果提供了密码，则更新密码

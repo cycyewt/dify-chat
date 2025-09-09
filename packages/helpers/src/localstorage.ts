@@ -5,6 +5,7 @@ const KEY_PREFIX = '__DC__'
 
 const LocalStorageKeyList = [
 	'USER_ID',
+	'USER_INFO',
 	'ENABLE_SETTING',
 	'THEME',
 	'THEME_MODE',
@@ -68,7 +69,7 @@ class LocalStorageStoreBuilder {
 	 * @param key 必须是 LocalStorageKeys 中的 key
 	 * @param value 必须是 string 类型
 	 */
-	set = (key: ILocalStorageKey, value: string) => {
+	set = (key: ILocalStorageKey, value: string | object) => {
 		this.validateKey(key)
 		// 如果是对象或数组，尝试转换为 JSON 字符串
 		if (typeof value === 'object' && value !== null) {

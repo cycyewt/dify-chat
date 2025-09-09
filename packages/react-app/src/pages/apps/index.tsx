@@ -5,7 +5,7 @@ import { useRequest } from 'ahooks'
 import { Col, Empty, message, Row } from 'antd'
 import { useHistory } from 'pure-react-router'
 
-import { DebugMode, HeaderLayout, LucideIcon } from '@/components'
+import { HeaderLayout, LucideIcon } from '@/components'
 import appService from '@/services/app'
 
 export default function AppListPage() {
@@ -113,7 +113,6 @@ export default function AppListPage() {
 					</div>
 				)}
 			</div>
-			<DebugMode />
 		</div>
 	)
 }

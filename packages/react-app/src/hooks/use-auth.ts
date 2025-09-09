@@ -1,12 +1,20 @@
 import { LocalStorageKeys, LocalStorageStore } from '@dify-chat/helpers'
 import { useHistory } from 'pure-react-router'
 
+import { ISession } from '@/utils/auth.ts'
+
+export interface IAuth {
+	isAuthorized: boolean
+	goAuthorize: () => void
+	userInfo: ISession
+}
+
 /**
  * 授权 hook
  */
-export const useAuth = () => {
+export const useAuth = (): IAuth => {
 	const history = useHistory()
-	const userId = LocalStorageStore.get(LocalStorageKeys.USER_ID)
+	const userInfo: ISession = LocalStorageStore.get(LocalStorageKeys.USER_INFO)
 
 	/**
 	 * 跳转登录页
@@ -16,8 +24,8 @@ export const useAuth = () => {
 	}
 
 	return {
-		isAuthorized: !!userId,
+		isAuthorized: !!userInfo,
 		goAuthorize,
-		userId,
+		userInfo,
 	}
 }

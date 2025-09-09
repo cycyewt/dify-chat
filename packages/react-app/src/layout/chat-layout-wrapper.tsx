@@ -1,4 +1,4 @@
-import { DownOutlined } from '@ant-design/icons'
+import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons'
 import {
 	AppContextProvider,
 	DEFAULT_APP_SITE_SETTING,
@@ -7,12 +7,12 @@ import {
 } from '@dify-chat/core'
 import { useIsMobile } from '@dify-chat/helpers'
 import { useMount, useRequest } from 'ahooks'
-import { Dropdown, message } from 'antd'
+import { Button, Dropdown, message } from 'antd'
 import { useHistory, useParams } from 'pure-react-router'
 import { useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 
-import { DebugMode, LucideIcon } from '@/components'
+import { LucideIcon } from '@/components'
 import { isDebugMode } from '@/components/debug-mode'
 import { useAuth } from '@/hooks/use-auth'
 import appService from '@/services/app'
@@ -22,7 +22,9 @@ import MainLayout from './main-layout'
 
 const MultiAppLayout = () => {
 	const history = useHistory()
-	const { userId } = useAuth()
+	const { userInfo } = useAuth()
+	console.log('userInfo', userInfo)
+	const userId = userInfo.user.id
 
 	const [difyApi] = useState(
 		createDifyApiInstance({
@@ -83,7 +85,7 @@ const MultiAppLayout = () => {
 		},
 	)
 
-	const { runAsync: getAppSiteSettting } = useRequest(
+	const { runAsync: getAppSiteSetting } = useRequest(
 		(difyApi: DifyApi) => {
 			return difyApi
 				.getAppSiteSetting()
@@ -125,7 +127,7 @@ const MultiAppLayout = () => {
 		setInitLoading(true)
 		// 获取应用参数
 		const getParameters = () => getAppParameters(difyApi)
-		const getSiteSetting = () => getAppSiteSettting(difyApi)
+		const getSiteSetting = () => getAppSiteSetting(difyApi)
 		const promises = [getParameters(), getSiteSetting()] as const
 		Promise.all(promises)
 			.then(res => {
@@ -234,8 +236,31 @@ const MultiAppLayout = () => {
 							</div>
 						)
 					}}
+					renderCenterTitleAddon={() => {
+						return userInfo ? (
+							<Dropdown
+								menu={{
+									items: [
+										{
+											key: 'logout',
+											icon: <LogoutOutlined />,
+											label: '退出登录',
+										},
+									],
+								}}
+								placement="bottomRight"
+							>
+								<Button
+									type="text"
+									shape="round"
+									icon={<UserOutlined />}
+								>
+									{userInfo.user.name || userInfo.user.id}
+								</Button>
+							</Dropdown>
+						) : null
+					}}
 				/>
-				<DebugMode />
 			</>
 		</AppContextProvider>
 	)

@@ -521,7 +521,7 @@ export class DifyApi {
 		}
 
 		return this.baseRequest.get(
-			`/conversation/${conversation_id}/messages`,
+			`/conversations/${conversation_id}/messages`,
 			params,
 		) as Promise<IListMessagesResponse>
 	}

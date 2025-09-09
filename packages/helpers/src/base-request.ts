@@ -15,6 +15,7 @@ export class BaseRequest {
 				...this.options.headers,
 				...options.headers,
 			},
+			credentials: 'include',
 		})
 		return result
 	}
@@ -26,6 +27,7 @@ export class BaseRequest {
 				...options.headers,
 				'Content-Type': 'application/json',
 			},
+			credentials: 'include',
 		})
 		return result.json()
 	}

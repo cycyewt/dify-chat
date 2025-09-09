@@ -1,52 +1,124 @@
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { LocalStorageKeys, LocalStorageStore } from '@dify-chat/helpers'
-import FingerPrintJS from '@fingerprintjs/fingerprintjs'
 import { useMount } from 'ahooks'
-import { Spin } from 'antd'
+import { Button, Card, Form, Input, message } from 'antd'
+import { useHistory } from 'pure-react-router'
+import { useState } from 'react'
 
 import { Logo } from '@/components'
-import { useAuth } from '@/hooks/use-auth'
-import { useRedirect2Index } from '@/hooks/use-jump'
+import { getCsrfToken, getSession, login } from '@/utils/auth.ts'
+
+interface LoginForm {
+	sn: string
+	password: string
+}
 
 export default function AuthPage() {
-	const { userId } = useAuth()
-	const redirect2Index = useRedirect2Index()
+	const history = useHistory()
+	const [loading, setLoading] = useState(false)
 
-	/**
-	 * 模拟登录接口
-	 */
-	const mockLogin = async () => {
-		const fp = await FingerPrintJS.load()
-		const result = await fp.get()
-		return {
-			userId: result.visitorId,
+	const onFinish = async (values: LoginForm) => {
+		setLoading(true)
+		try {
+			const result = await login({
+				sn: values.sn,
+				password: values.password,
+			})
+
+			if (result?.error) {
+				message.open({
+					type: 'error',
+					content: '登录失败，请检查账号和密码',
+				})
+			} else {
+				message.open({
+					type: 'success',
+					content: '登录成功',
+				})
+				// 获取会话信息并跳转
+				const session = await getSession()
+				if (session) {
+					// 存储用户信息
+					LocalStorageStore.set(LocalStorageKeys.USER_INFO, session)
+					history.push('/apps')
+				}
+			}
+		} catch (error) {
+			console.error('登录过程中发生错误', error)
+			message.open({
+				type: 'error',
+				content: '登录过程中发生错误',
+			})
+		} finally {
+			setLoading(false)
 		}
-	}
-
-	/**
-	 * 登录函数
-	 */
-	const handleLogin = async () => {
-		const userInfo = await mockLogin()
-		LocalStorageStore.set(LocalStorageKeys.USER_ID, userInfo.userId)
-		redirect2Index()
 	}
 
 	useMount(() => {
-		if (!userId) {
-			// 模拟自动登录
-			handleLogin()
-		} else {
-			redirect2Index()
-		}
+		getCsrfToken()
 	})
 
 	return (
 		<div className="w-screen h-screen flex flex-col items-center justify-center bg-theme-bg">
 			<div className="absolute flex-col w-full h-full left-0 top-0 z-50 flex items-center justify-center">
-				<Logo hideGithubIcon />
-				<div className="text-theme-text">授权登录中...</div>
+				<Logo
+					hideGithubIcon
+					text={''}
+				/>
+				<div className="text-theme-text">请登录您的账户</div>
 				<div className="mt-6">
-					<Spin spinning />
+					<Card className="w-full max-w-md">
+						<Form
+							name="login"
+							onFinish={onFinish}
+							autoComplete="off"
+							size="large"
+						>
+							<Form.Item
+								name="sn"
+								rules={[
+									{
+										validator: (rule, value) => {
+											if (/^\d{6,7}$/.test(value)) {
+												return Promise.resolve()
+											}
+
+											return Promise.reject()
+										},
+										message: '请输入有效的账号',
+									},
+								]}
+							>
+								<Input
+									prefix={<UserOutlined />}
+									placeholder="账号"
+									allowClear
+								/>
+							</Form.Item>
+
+							<Form.Item
+								name="password"
+								rules={[{ required: true, message: '请输入密码' }]}
+							>
+								<Input.Password
+									prefix={<LockOutlined />}
+									placeholder="密码"
+									allowClear
+								/>
+							</Form.Item>
+
+							<Form.Item>
+								<Button
+									type="primary"
+									htmlType="submit"
+									className="w-full"
+									loading={loading}
+								>
+									登录
+								</Button>
+							</Form.Item>
+						</Form>
+					</Card>
 				</div>
 			</div>
 		</div>

@@ -59,9 +59,10 @@ export default function RoleManagementPage() {
 				})
 				fetchRoles()
 			} else {
+				const error = await response.json()
 				message.open({
 					type: 'error',
-					content: '删除角色失败',
+					content: error.message || '删除角色失败',
 				})
 			}
 		} catch (error) {

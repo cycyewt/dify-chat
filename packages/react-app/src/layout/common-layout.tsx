@@ -1,22 +1,31 @@
-import { HeaderLayout } from '@/components'
 import { IDifyAppItem, useAppContext } from '@dify-chat/core'
 import { Empty, Spin } from 'antd'
+
+import { HeaderLayout } from '@/components'
 
 interface ICommonLayoutProps {
 	initLoading: boolean
 	renderCenterTitle?: (appInfo?: IDifyAppItem['info']) => React.ReactNode
+	/**
+	 * 自定义中心标题附加
+	 */
+	renderCenterTitleAddon?: () => React.ReactNode
 	children: React.ReactNode
 	extComponents?: React.ReactNode
 }
 
 export default function CommonLayout(props: ICommonLayoutProps) {
-	const { initLoading, renderCenterTitle, children, extComponents } = props
+	const { initLoading, renderCenterTitle, renderCenterTitleAddon, children, extComponents } = props
 	const { appLoading, currentApp } = useAppContext()
 
 	return (
 		<div className={`w-full h-screen flex flex-col overflow-hidden bg-theme-bg`}>
 			{/* 头部 */}
-			<HeaderLayout title={renderCenterTitle?.(currentApp?.config?.info)} />
+			<HeaderLayout
+				title={renderCenterTitle?.(currentApp?.config?.info)}
+				titleAddon={renderCenterTitleAddon?.()}
+				logoText={''}
+			/>
 
 			{/* Main */}
 			<div className="flex-1 overflow-hidden flex rounded-t-3xl bg-theme-main-bg">

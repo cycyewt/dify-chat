@@ -19,6 +19,10 @@ interface IMainLayoutProps {
 	 */
 	renderCenterTitle?: (appInfo?: IDifyAppItem['info']) => React.ReactNode
 	/**
+	 * 自定义中心标题附加
+	 */
+	renderCenterTitleAddon?: () => React.ReactNode
+	/**
 	 * 自定义右侧头部内容
 	 */
 	renderRightHeader?: () => React.ReactNode

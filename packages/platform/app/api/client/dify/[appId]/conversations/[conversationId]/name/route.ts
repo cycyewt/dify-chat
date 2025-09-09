@@ -46,11 +46,10 @@ export async function POST(
 		const response = await proxyDifyRequest(
 			app.requestConfig.apiBase,
 			app.requestConfig.apiKey,
-			`/conversations/${conversationId}/name`,
+			`/conversations/${conversationId.toUpperCase()}/name`,
 			{
 				method: 'POST',
 				body: JSON.stringify({
-					conversation_id: conversationId,
 					name,
 					auto_generate,
 					user: userId,
@@ -58,7 +57,7 @@ export async function POST(
 			},
 		)
 
-		const data = await response.text()
+		const data = await response.json()
 		return createDifyApiResponse(data, response.status)
 	} catch (error) {
 		const resolvedParams = await params

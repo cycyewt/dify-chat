@@ -1,5 +1,7 @@
 'use server'
 
+import { Prisma } from '@prisma/client'
+
 import { appItemToDbApp, appItemToDbAppUpdate, dbAppToAppItem } from '@/lib/db/types'
 import { prisma } from '@/lib/prisma'
 import { IDifyAppItem } from '@/types'
@@ -7,13 +9,51 @@ import { IDifyAppItem } from '@/types'
 /**
  * 获取应用列表数据
  */
-export const getAppList = async (): Promise<IDifyAppItem[]> => {
+export const getAppList = async (userId?: number): Promise<IDifyAppItem[]> => {
 	try {
-		const dbApps = await prisma.difyApp.findMany({
-			orderBy: {
-				createdAt: 'desc',
-			},
-		})
+		let dbApps: Prisma.DifyAppSelect[]
+		if (userId) {
+			const userRoles = await prisma.userRole.findMany({
+				where: {
+					userId,
+				},
+				select: {
+					roleId: true,
+				},
+			})
+			const roleIds = userRoles.map(role => role.roleId)
+			const roles = await prisma.role.findMany({
+				where: {
+					id: {
+						in: roleIds,
+					},
+				},
+			})
+			const roleDifyApps = await prisma.roleDifyApp.findMany({
+				where: {
+					roleId: {
+						in: roleIds,
+					},
+				},
+				select: {
+					difyAppId: true,
+				},
+			})
+			const appIds = roleDifyApps.map(roleDifyApp => roleDifyApp.difyAppId)
+			dbApps = await prisma.difyApp.findMany({
+				where: {
+					id: {
+						in: appIds,
+					},
+				},
+			})
+		} else {
+			dbApps = await prisma.difyApp.findMany({
+				orderBy: {
+					createdAt: 'desc',
+				},
+			})
+		}
 		return dbApps.map(dbAppToAppItem)
 	} catch (error) {
 		console.error('Error fetching app list:', error)

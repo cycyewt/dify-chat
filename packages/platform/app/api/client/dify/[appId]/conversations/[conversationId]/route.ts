@@ -11,9 +11,9 @@ import {
 import { getAppItem } from '@/repository/app'
 
 /**
- * 重命名会话
+ * 删除会话
  */
-export async function POST(
+export async function DELETE(
 	request: NextRequest,
 	{ params }: { params: Promise<{ appId: string; conversationId: string }> },
 ) {
@@ -26,19 +26,6 @@ export async function POST(
 			return createDifyApiResponse({ error: 'App not found' }, 404)
 		}
 
-		// 获取请求体
-		const { name, auto_generate } = await request.json()
-
-		if (!conversationId) {
-			return createDifyApiResponse(
-				{
-					error:
-						'Bad Request: lack of conversation_id. Please provide the "conversation_id" in your request.',
-				},
-				400,
-			)
-		}
-
 		// 获取用户ID
 		const userId = getUserIdFromRequest(request)
 
@@ -46,25 +33,21 @@ export async function POST(
 		const response = await proxyDifyRequest(
 			app.requestConfig.apiBase,
 			app.requestConfig.apiKey,
-			`/conversations/${conversationId}/name`,
+			`/conversations/${conversationId}`,
 			{
-				method: 'POST',
+				method: 'DELETE',
 				body: JSON.stringify({
-					conversation_id: conversationId,
-					name,
-					auto_generate,
 					user: userId,
 				}),
 			},
 		)
 
-		const data = await response.text()
-		return createDifyApiResponse(data, response.status)
+		return createDifyApiResponse<null>(null, response.status)
 	} catch (error) {
 		const resolvedParams = await params
 		return handleApiError(
 			error,
-			`Error renaming conversation ${resolvedParams.conversationId} for ${resolvedParams.appId}`,
+			`Error deleting conversation ${resolvedParams.conversationId} for ${resolvedParams.appId}`,
 		)
 	}
 }

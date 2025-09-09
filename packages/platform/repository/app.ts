@@ -7,8 +7,8 @@ import * as prismaRepo from './prisma/app'
 /**
  * 获取应用列表数据
  */
-export const getAppList = async (): Promise<IDifyAppItem[]> => {
-	return prismaRepo.getAppList()
+export const getAppList = async (userId?: number): Promise<IDifyAppItem[]> => {
+	return prismaRepo.getAppList(userId)
 }
 
 /**

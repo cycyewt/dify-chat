@@ -10,7 +10,7 @@ export const authOptions = {
 		CredentialsProvider({
 			name: 'credentials',
 			credentials: {
-				sn: { label: '账号', type: 'email' },
+				sn: { label: '账号' },
 				password: { label: '密码', type: 'password' },
 			},
 			async authorize(credentials) {

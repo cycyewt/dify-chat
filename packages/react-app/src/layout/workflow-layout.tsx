@@ -285,7 +285,7 @@ export default function WorkflowLayout(props: IWorkflowLayoutProps) {
 				<div className="md:flex-1 px-4 pt-6 overflow-x-hidden overflow-y-auto">
 					{!workflowItems?.length && workflowStatus !== 'running' ? (
 						<div className="w-full h-full flex items-center justify-center">
-							<Empty description={`点击 "运行" 试试看, AI 会给你带来意想不到的惊喜。 `} />
+							<Empty description={`点击 "运行" 试试看`} />
 						</div>
 					) : (
 						<>
@@ -305,7 +305,7 @@ export default function WorkflowLayout(props: IWorkflowLayoutProps) {
 				<div className="md:flex-1 px-4 pt-6 overflow-x-hidden overflow-y-auto bg-theme-bg">
 					{textGenerateStatus === 'init' ? (
 						<div className="w-full h-full flex items-center justify-center">
-							<Empty description={`点击 "运行" 试试看, AI 会给你带来意想不到的惊喜。 `} />
+							<Empty description={`点击 "运行" 试试看`} />
 						</div>
 					) : (
 						<MarkdownRenderer markdownText={text} />
