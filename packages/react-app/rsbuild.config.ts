@@ -21,6 +21,10 @@ export default defineConfig({
 			'process.env.PUBLIC_DIFY_PROXY_API_BASE': JSON.stringify(
 				process.env.PUBLIC_DIFY_PROXY_API_BASE,
 			),
+			// 登录地址
+			'process.env.PUBLIC_AUTH_URL': JSON.stringify(process.env.PUBLIC_AUTH_URL),
+			// 登录 API 地址
+			'process.env.PUBLIC_AUTH_API_BASE': JSON.stringify(process.env.PUBLIC_AUTH_API_BASE),
 		},
 	},
 	output: {
@@ -44,7 +48,7 @@ export default defineConfig({
 	],
 	server: {
 		compress: false, // 解决代理后流式输出失效的问题
-		base: '/aihub',
+		base: '/',
 		port: 5200,
 		// 允许外部访问
 		host: '0.0.0.0',

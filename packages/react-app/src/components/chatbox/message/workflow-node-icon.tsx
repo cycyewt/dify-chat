@@ -21,7 +21,7 @@ const iconMap: Record<IIconType, React.ReactNode> = {
 	),
 	llm: (
 		<LucideIcon
-			name="bot"
+			name="bot-message-square"
 			className="!text-theme-text"
 		/>
 	),
@@ -34,7 +34,7 @@ export default function WorkflowNodeIcon(props: IWorkflowNodeIconProps) {
 	return (
 		iconMap[props.type] || (
 			<LucideIcon
-				name="bot"
+				name="bot-message-square"
 				className="!text-theme-text"
 			/>
 		)

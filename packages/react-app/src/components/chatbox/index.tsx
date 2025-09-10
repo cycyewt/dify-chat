@@ -123,7 +123,7 @@ export const Chatbox = (props: ChatboxProps) => {
 		<AppIcon hasContainer />
 	) : (
 		<LucideIcon
-			name="bot"
+			name="bot-message-square"
 			size={18}
 		/>
 	)

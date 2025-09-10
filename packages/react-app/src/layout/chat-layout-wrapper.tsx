@@ -1,19 +1,21 @@
-import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons'
+import { DownOutlined, InfoCircleTwoTone } from '@ant-design/icons'
 import {
 	AppContextProvider,
+	AppModeEnums,
 	DEFAULT_APP_SITE_SETTING,
 	ICurrentApp,
 	IDifyAppItem,
 } from '@dify-chat/core'
 import { useIsMobile } from '@dify-chat/helpers'
 import { useMount, useRequest } from 'ahooks'
-import { Button, Dropdown, message } from 'antd'
+import { Dropdown, message, Tooltip } from 'antd'
 import { useHistory, useParams } from 'pure-react-router'
 import { useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 
 import { LucideIcon } from '@/components'
 import { isDebugMode } from '@/components/debug-mode'
+import SystemMenu from '@/components/system-menu'
 import { useAuth } from '@/hooks/use-auth'
 import appService from '@/services/app'
 import { createDifyApiInstance, DifyApi } from '@/utils/dify-api'
@@ -24,7 +26,7 @@ const MultiAppLayout = () => {
 	const history = useHistory()
 	const { userInfo } = useAuth()
 	console.log('userInfo', userInfo)
-	const userId = userInfo.user.id
+	const userId = userInfo?.user.id
 
 	const [difyApi] = useState(
 		createDifyApiInstance({
@@ -184,7 +186,7 @@ const MultiAppLayout = () => {
 								<span
 									className="cursor-pointer inline-block shrink-0"
 									onClick={() => {
-										history.push('/apps')
+										history.push('apps')
 									}}
 								>
 									应用列表
@@ -210,14 +212,32 @@ const MultiAppLayout = () => {
 																</div>
 															),
 															onClick: () => {
-																history.push(`/apps/${item.id}`)
+																history.push(`apps/${item.id}`)
 																setSelectedAppId(item.id)
 															},
 															icon: (
 																<LucideIcon
-																	name="bot"
+																	name={
+																		item.info.mode === AppModeEnums.CHATBOT
+																			? 'bot-message-square'
+																			: item.info.mode === AppModeEnums.WORKFLOW
+																				? 'workflow'
+																				: item.info.mode === AppModeEnums.CHATFLOW
+																					? 'workflow'
+																					: item.info.mode === AppModeEnums.TEXT_GENERATOR
+																						? 'pen-line'
+																						: 'brain-circuit'
+																	}
 																	size={18}
 																/>
+															),
+															extra: (
+																<Tooltip
+																	title={item.info.description}
+																	placement={'right'}
+																>
+																	<InfoCircleTwoTone />
+																</Tooltip>
 															),
 														}
 													}) || []),
@@ -236,30 +256,7 @@ const MultiAppLayout = () => {
 							</div>
 						)
 					}}
-					renderCenterTitleAddon={() => {
-						return userInfo ? (
-							<Dropdown
-								menu={{
-									items: [
-										{
-											key: 'logout',
-											icon: <LogoutOutlined />,
-											label: '退出登录',
-										},
-									],
-								}}
-								placement="bottomRight"
-							>
-								<Button
-									type="text"
-									shape="round"
-									icon={<UserOutlined />}
-								>
-									{userInfo.user.name || userInfo.user.id}
-								</Button>
-							</Dropdown>
-						) : null
-					}}
+					renderRightHeader={() => <SystemMenu />}
 				/>
 			</>
 		</AppContextProvider>

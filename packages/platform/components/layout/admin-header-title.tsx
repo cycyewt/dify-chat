@@ -8,6 +8,7 @@ import {
 	UserOutlined,
 } from '@ant-design/icons'
 import { Button, Dropdown, message, Segmented, Space } from 'antd'
+import { MenuItemType } from 'antd/es/menu/interface'
 import { signOut, useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -64,7 +65,7 @@ export default function AdminHeaderTitle() {
 		navigate.push('/login')
 	}
 
-	const menuItems = [
+	const menuItems: MenuItemType[] = [
 		{
 			key: 'logout',
 			icon: <LogoutOutlined />,
@@ -92,7 +93,8 @@ export default function AdminHeaderTitle() {
 			{session?.user && (
 				<Dropdown
 					menu={{ items: menuItems }}
-					placement="bottomRight"
+					placement="bottom"
+					arrow
 				>
 					<Button
 						type="text"

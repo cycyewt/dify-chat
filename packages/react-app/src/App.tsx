@@ -14,10 +14,10 @@ import ChatPage from './pages/chat'
 initResponsiveConfig()
 
 const routes: IRoute[] = [
-	{ path: '/auth', component: () => <AuthPage /> },
-	{ path: '/chat', component: () => <ChatPage /> },
-	{ path: '/apps/:appId', component: () => <ChatPage /> },
-	{ path: '/apps', component: () => <AppListPage /> },
+	{ path: 'auth', component: () => <AuthPage /> },
+	{ path: 'chat', component: () => <ChatPage /> },
+	{ path: 'apps/:appId', component: () => <ChatPage /> },
+	{ path: 'apps', component: () => <AppListPage /> },
 ]
 
 /**
@@ -34,7 +34,7 @@ export default function App() {
 			}}
 		>
 			<BrowserRouter
-				basename="/aihub"
+				basename="/"
 				routes={routes}
 			>
 				<LayoutIndex />

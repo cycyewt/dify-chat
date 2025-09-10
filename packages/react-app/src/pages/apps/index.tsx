@@ -6,6 +6,7 @@ import { Col, Empty, message, Row, Spin } from 'antd'
 import { useHistory } from 'pure-react-router'
 
 import { HeaderLayout, LucideIcon } from '@/components'
+import SystemMenu from '@/components/system-menu'
 import appService from '@/services/app'
 
 export default function AppListPage() {
@@ -38,13 +39,11 @@ export default function AppListPage() {
 					</div>
 				}
 				logoText={''}
+				renderRightHeader={() => <SystemMenu />}
 			/>
 			{loading ? (
 				<div className="flex-1 flex justify-center items-center bg-theme-main-bg rounded-3xl py-6 overflow-y-auto box-border overflow-x-hidden">
-					<Spin
-						size={'large'}
-						spinning
-					></Spin>
+					<Spin spinning />
 				</div>
 			) : (
 				<div className="flex-1 bg-theme-main-bg rounded-3xl py-6 overflow-y-auto box-border overflow-x-hidden">
@@ -81,13 +80,13 @@ export default function AppListPage() {
 										>
 											<div
 												onClick={() => {
-													history.push(`/apps/${item.id}`)
+													history.push(`apps/${item.id}`)
 												}}
 											>
 												<div className="flex items-center overflow-hidden">
 													<div className="h-10 w-10 bg-[#ffead5] dark:bg-transparent border border-solid border-transparent dark:border-theme-border rounded-lg flex items-center justify-center">
 														<LucideIcon
-															name="bot"
+															name="bot-message-square"
 															className="text-xl text-theme-text"
 														/>
 													</div>

@@ -2,12 +2,13 @@ import { LocalStorageKeys, LocalStorageStore } from '@dify-chat/helpers'
 import dayjs from 'dayjs'
 import { useHistory } from 'pure-react-router'
 
-import { ISession, logoutApi } from '@/services/auth'
+import { getSessionApi, ISession, logoutApi } from '@/services/auth'
 
 export interface IAuth {
 	userInfo: ISession
 	isAuthorized: boolean
 	goAuthorize: () => void
+	getSession: () => Promise<ISession | void>
 	logout: () => Promise<void>
 }
 
@@ -25,7 +26,19 @@ export const useAuth = (): IAuth => {
 	 * 跳转登录页
 	 */
 	const goAuthorize = () => {
-		history.replace('/auth')
+		history.replace('auth')
+	}
+
+	/**
+	 * 获取会话信息
+	 */
+	const getSession = async (): Promise<ISession | void> => {
+		const session = await getSessionApi()
+		if (!session.user) {
+			return goAuthorize()
+		}
+
+		return session
 	}
 
 	/**
@@ -33,13 +46,15 @@ export const useAuth = (): IAuth => {
 	 */
 	const logout = async () => {
 		await logoutApi()
-		history.replace('/auth')
+		LocalStorageStore.remove(LocalStorageKeys.USER_INFO)
+		goAuthorize()
 	}
 
 	return {
 		userInfo,
 		isAuthorized,
 		goAuthorize,
+		getSession,
 		logout,
 	}
 }

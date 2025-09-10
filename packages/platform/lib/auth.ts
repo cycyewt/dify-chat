@@ -1,13 +1,13 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import bcrypt from 'bcryptjs'
-import Credentials from 'next-auth/providers/credentials'
+import CredentialsProvider from 'next-auth/providers/credentials'
 
 import { prisma } from './prisma'
 
 export const authOptions = {
 	adapter: PrismaAdapter(prisma),
 	providers: [
-		Credentials({
+		CredentialsProvider({
 			name: 'credentials',
 			credentials: {
 				sn: { label: '账号', type: 'text' },
@@ -38,7 +38,6 @@ export const authOptions = {
 				return {
 					id: user.id,
 					name: user.name,
-					sn: user.sn,
 				}
 			},
 		}),
@@ -61,8 +60,6 @@ export const authOptions = {
 		session({ session, token }: any) {
 			if (token && session.user) {
 				session.user.id = token.id as string
-				session.user.name = token.name as string
-				session.user.sn = token.sn as string
 			}
 			return session
 		},

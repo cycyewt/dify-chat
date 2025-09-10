@@ -20,11 +20,13 @@ export const getCsrfTokenApi = async () => {
 }
 
 export const loginApi = async (credentials: ICredentials) => {
-	const response = await fetch(`${API_BASE}/callback/credentials`, {
+	const csrfToken = await getCsrfTokenApi()
+	const response = await fetch(`${API_BASE}/signin/credentials`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 		body: new URLSearchParams({
 			...credentials,
+			csrfToken,
 			json: 'true',
 			redirect: 'false',
 		}),
@@ -47,5 +49,6 @@ export const logoutApi = async () => {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 		body: new URLSearchParams({ csrfToken, json: 'true' }),
+		credentials: 'include',
 	})
 }

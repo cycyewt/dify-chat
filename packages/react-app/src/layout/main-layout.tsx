@@ -19,10 +19,6 @@ interface IMainLayoutProps {
 	 */
 	renderCenterTitle?: (appInfo?: IDifyAppItem['info']) => React.ReactNode
 	/**
-	 * 自定义中心标题附加
-	 */
-	renderCenterTitleAddon?: () => React.ReactNode
-	/**
 	 * 自定义右侧头部内容
 	 */
 	renderRightHeader?: () => React.ReactNode
@@ -54,6 +50,7 @@ const MainLayout = (props: IMainLayoutProps) => {
 					initLoading={props.initLoading}
 					renderCenterTitle={props.renderCenterTitle}
 					extComponents={props.extComponents}
+					renderRightHeader={props.renderRightHeader}
 				>
 					{[AppModeEnums.WORKFLOW, AppModeEnums.TEXT_GENERATOR].includes(appMode) ? (
 						<WorkflowLayout difyApi={props.difyApi} />

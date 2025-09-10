@@ -7,15 +7,15 @@ interface ICommonLayoutProps {
 	initLoading: boolean
 	renderCenterTitle?: (appInfo?: IDifyAppItem['info']) => React.ReactNode
 	/**
-	 * 自定义中心标题附加
+	 * 自定义右侧头部内容
 	 */
-	renderCenterTitleAddon?: () => React.ReactNode
+	renderRightHeader?: () => React.ReactNode
 	children: React.ReactNode
 	extComponents?: React.ReactNode
 }
 
 export default function CommonLayout(props: ICommonLayoutProps) {
-	const { initLoading, renderCenterTitle, renderCenterTitleAddon, children, extComponents } = props
+	const { initLoading, renderCenterTitle, renderRightHeader, children, extComponents } = props
 	const { appLoading, currentApp } = useAppContext()
 
 	return (
@@ -23,8 +23,8 @@ export default function CommonLayout(props: ICommonLayoutProps) {
 			{/* 头部 */}
 			<HeaderLayout
 				title={renderCenterTitle?.(currentApp?.config?.info)}
-				titleAddon={renderCenterTitleAddon?.()}
 				logoText={''}
+				renderRightHeader={renderRightHeader}
 			/>
 
 			{/* Main */}

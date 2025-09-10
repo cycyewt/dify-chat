@@ -4,7 +4,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Input, message } from 'antd'
 import { getSession, signIn } from 'next-auth/react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
 import LogoIcon from '@/assets/images/logo.png'
@@ -17,6 +17,8 @@ interface LoginForm {
 export default function LoginPage() {
 	const [loading, setLoading] = useState(false)
 	const router = useRouter()
+	const searchParams = useSearchParams()
+	const callbackUrl = searchParams.get('callbackUrl')
 
 	const onFinish = async (values: LoginForm) => {
 		setLoading(true)
@@ -40,7 +42,13 @@ export default function LoginPage() {
 				// 获取会话信息并跳转
 				const session = await getSession()
 				if (session) {
-					router.push('/')
+					if (callbackUrl) {
+						const url = new URL(callbackUrl)
+						url.searchParams.append('userInfo', encodeURIComponent(JSON.stringify(session)))
+						router.replace(url.href)
+					} else {
+						router.push('/')
+					}
 				}
 			}
 		} catch (error) {
@@ -66,7 +74,7 @@ export default function LoginPage() {
 							alt="管理后台"
 						/>
 					</div>
-					<h1 className="text-2xl font-bold text-gray-900">管理后台</h1>
+					{!callbackUrl && <h1 className="text-2xl font-bold text-gray-900">管理后台</h1>}
 					<p className="text-gray-600 mt-2">请登录您的账户</p>
 				</div>
 

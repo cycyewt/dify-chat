@@ -43,10 +43,6 @@ interface IChatLayoutProps {
 	 */
 	renderCenterTitle?: (appInfo?: IDifyAppItem['info']) => React.ReactNode
 	/**
-	 * 自定义中心标题附加
-	 */
-	renderCenterTitleAddon?: () => React.ReactNode
-	/**
 	 * 自定义右侧头部内容
 	 */
 	renderRightHeader?: () => React.ReactNode
@@ -61,7 +57,7 @@ interface IChatLayoutProps {
 }
 
 export default function ChatLayout(props: IChatLayoutProps) {
-	const { extComponents, renderCenterTitle, renderCenterTitleAddon, initLoading, difyApi } = props
+	const { extComponents, renderCenterTitle, initLoading, difyApi, renderRightHeader } = props
 	const [sidebarOpen, setSidebarOpen] = useState(true)
 	const { themeMode, setThemeMode } = useThemeContext()
 	const { appLoading, currentApp } = useAppContext()
@@ -380,7 +376,6 @@ export default function ChatLayout(props: IChatLayoutProps) {
 				{/* 头部 */}
 				<HeaderLayout
 					title={renderCenterTitle?.(currentApp?.config?.info)}
-					titleAddon={renderCenterTitleAddon?.()}
 					rightIcon={
 						isMobile ? (
 							<Dropdown
@@ -395,6 +390,7 @@ export default function ChatLayout(props: IChatLayoutProps) {
 						) : null
 					}
 					logoText={''}
+					renderRightHeader={renderRightHeader}
 				/>
 
 				{/* Main */}

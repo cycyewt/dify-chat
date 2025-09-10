@@ -1,7 +1,9 @@
 'use server'
 
+import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
 
+import { authOptions } from '@/lib/auth'
 import { getAppItem } from '@/repository/app'
 
 /**
@@ -17,6 +19,7 @@ export async function POST(
 ) {
 	try {
 		const { appId } = await params
+		const session = await getServerSession(authOptions)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
@@ -34,7 +37,10 @@ export async function POST(
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${app.requestConfig.apiKey}`,
 			},
-			body: JSON.stringify(data),
+			body: JSON.stringify({
+				...data,
+				user: String(session?.user?.id ?? 0),
+			}),
 		})
 
 		// 如果是流式响应，需要特殊处理

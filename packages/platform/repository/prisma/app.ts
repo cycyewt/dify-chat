@@ -1,7 +1,5 @@
 'use server'
 
-import { Prisma } from '@prisma/client'
-
 import { appItemToDbApp, appItemToDbAppUpdate, dbAppToAppItem } from '@/lib/db/types'
 import { prisma } from '@/lib/prisma'
 import { IDifyAppItem } from '@/types'

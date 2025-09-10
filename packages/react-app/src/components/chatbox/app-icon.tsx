@@ -36,6 +36,7 @@ export default function AppIcon(props: { size?: 'small' | 'default'; hasContaine
 			<img
 				className="w-full h-full inline-block"
 				src={renderProps.icon}
+				alt=""
 			/>
 		)
 	}, [renderProps])

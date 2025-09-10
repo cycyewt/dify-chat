@@ -1,13 +1,10 @@
 'use server'
 
+import { getServerSession } from 'next-auth/next'
 import { NextRequest } from 'next/server'
 
-import {
-	createDifyApiResponse,
-	createFormDataProxy,
-	getUserIdFromRequest,
-	handleApiError,
-} from '@/lib/api-utils'
+import { createDifyApiResponse, createFormDataProxy, handleApiError } from '@/lib/api-utils'
+import { authOptions } from '@/lib/auth'
 import { getAppItem } from '@/repository/app'
 
 /**
@@ -19,6 +16,7 @@ export async function POST(
 ) {
 	try {
 		const { appId } = await params
+		const session = await getServerSession(authOptions)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
@@ -26,12 +24,9 @@ export async function POST(
 			return createDifyApiResponse({ error: 'App not found' }, 404)
 		}
 
-		// 获取用户ID
-		const userId = getUserIdFromRequest(request)
-
 		// 构建代理 FormData
 		const proxyFormData = await createFormDataProxy(request)
-		proxyFormData.append('user', userId)
+		proxyFormData.append('user', String(session?.user?.id ?? 0))
 
 		// 代理请求到 Dify API
 		const response = await fetch(`${app.requestConfig.apiBase}/audio-to-text`, {

@@ -5,7 +5,6 @@ import classNames from 'classnames'
 import React from 'react'
 
 import { LucideIcon } from '@/components'
-import { useAuth } from '@/hooks/use-auth.ts'
 
 import CenterTitleWrapper from './center-title-wrapper'
 import { Logo } from './logo'
@@ -15,10 +14,6 @@ export interface IHeaderLayoutProps {
 	 * 自定义标题
 	 */
 	title?: React.ReactNode
-	/**
-	 * 自定义标题附加
-	 */
-	titleAddon?: React.ReactNode
 	/**
 	 * 传进来的标题是否已经包含容器
 	 */
@@ -35,6 +30,10 @@ export interface IHeaderLayoutProps {
 	 * 自定义 Logo 渲染
 	 */
 	renderLogo?: () => React.ReactNode
+	/**
+	 * 自定义右侧头部内容
+	 */
+	renderRightHeader?: () => React.ReactNode
 }
 
 const HeaderSiderIcon = (props: { align: 'left' | 'right'; children: React.ReactNode }) => {
@@ -55,8 +54,7 @@ const HeaderSiderIcon = (props: { align: 'left' | 'right'; children: React.React
  * 头部布局组件
  */
 export default function HeaderLayout(props: IHeaderLayoutProps) {
-	const { isTitleWrapped, title, titleAddon, rightIcon, logoText, renderLogo } = props
-	const { isAuthorized, userInfo } = useAuth()
+	const { isTitleWrapped, title, rightIcon, logoText, renderLogo, renderRightHeader } = props
 	const { themeMode } = useThemeContext()
 	const isMobile = useIsMobile()
 	return (
@@ -72,17 +70,7 @@ export default function HeaderLayout(props: IHeaderLayoutProps) {
 			</HeaderSiderIcon>
 
 			{/* 中间标题 */}
-			{isTitleWrapped ? (
-				<>
-					<>{title}</>
-					<>{titleAddon}</>
-				</>
-			) : (
-				<CenterTitleWrapper>
-					{title}
-					{titleAddon}
-				</CenterTitleWrapper>
-			)}
+			{isTitleWrapped ? title : <CenterTitleWrapper>{title}</CenterTitleWrapper>}
 
 			{/* 右侧图标 */}
 			<HeaderSiderIcon align="right">
@@ -95,10 +83,11 @@ export default function HeaderLayout(props: IHeaderLayoutProps) {
 							<div className="flex items-center cursor-pointer">
 								<LucideIcon
 									name={themeMode === 'dark' ? 'moon' : themeMode === 'light' ? 'sun' : 'monitor'}
-									size={20}
+									size={16}
 								/>
 							</div>
 						</ThemeSelector>
+						{renderRightHeader?.()}
 					</Space>
 				)}
 			</HeaderSiderIcon>

@@ -1,3 +1,4 @@
+import { CaretRightOutlined } from '@ant-design/icons'
 import { XStream } from '@ant-design/x'
 import {
 	DifyApi,
@@ -273,6 +274,7 @@ export default function WorkflowLayout(props: IWorkflowLayoutProps) {
 							setText('')
 							handleTriggerWorkflow(values)
 						}}
+						icon={<CaretRightOutlined />}
 						loading={workflowStatus === 'running'}
 					>
 						运行

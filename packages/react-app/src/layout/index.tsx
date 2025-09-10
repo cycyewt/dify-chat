@@ -20,9 +20,10 @@ const RedirectWrapper = () => {
 			return
 		}
 
-		if (pathname === '' || pathname === '/') {
+		if (['', '/', '/login'].includes(pathname)) {
 			redirect2Index()
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [history.location.pathname, isAuthorized])
 
 	return <Route />

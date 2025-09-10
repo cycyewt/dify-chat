@@ -1,13 +1,10 @@
 'use server'
 
+import { getServerSession } from 'next-auth/next'
 import { NextRequest } from 'next/server'
 
-import {
-	createDifyApiResponse,
-	getUserIdFromRequest,
-	handleApiError,
-	proxyDifyRequest,
-} from '@/lib/api-utils'
+import { createDifyApiResponse, handleApiError, proxyDifyRequest } from '@/lib/api-utils'
+import { authOptions } from '@/lib/auth'
 import { getAppItem } from '@/repository/app'
 
 /**
@@ -19,15 +16,13 @@ export async function DELETE(
 ) {
 	try {
 		const { appId, conversationId } = await params
+		const session = await getServerSession(authOptions)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
 		if (!app) {
 			return createDifyApiResponse({ error: 'App not found' }, 404)
 		}
-
-		// 获取用户ID
-		const userId = getUserIdFromRequest(request)
 
 		// 代理请求到 Dify API
 		const response = await proxyDifyRequest(
@@ -37,7 +32,7 @@ export async function DELETE(
 			{
 				method: 'DELETE',
 				body: JSON.stringify({
-					user: userId,
+					user: String(session?.user?.id ?? 0),
 				}),
 			},
 		)
