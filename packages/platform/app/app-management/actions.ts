@@ -4,7 +4,7 @@ import {
 	addApp,
 	deleteApp as deleteAppItem,
 	getAppItem as getAppItemFromRepository,
-	getAppList as getAppListFromRepository,
+	getPagedAppList as getAppListFromRepository,
 	updateApp as updateAppItem,
 } from '@/repository/app'
 import { IDifyAppItem } from '@/types'

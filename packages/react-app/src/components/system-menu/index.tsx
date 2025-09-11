@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useAuth } from '@/hooks/use-auth.ts'
 
 export default function SystemMenu() {
-	const { userInfo, logout } = useAuth()
+	const { userInfo, logout, goAuthorize } = useAuth()
 	const [logoutLoading, setLogoutLoading] = useState(false)
 
 	const handleLogout = async () => {
@@ -38,5 +38,14 @@ export default function SystemMenu() {
 				{userInfo.user.name || userInfo.user.id}
 			</Button>
 		</Dropdown>
-	) : null
+	) : (
+		<Button
+			type="text"
+			shape="round"
+			icon={<UserOutlined />}
+			onClick={goAuthorize}
+		>
+			去登录
+		</Button>
+	)
 }

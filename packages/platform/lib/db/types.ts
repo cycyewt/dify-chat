@@ -14,7 +14,8 @@ export function dbAppToAppItem(dbApp: DifyApp): IDifyAppItem {
 			description: dbApp.description || '',
 			tags: dbApp.tags ? JSON.parse(dbApp.tags) : [],
 		},
-		isEnabled: (dbApp.isEnabled || 1) as 1 | 2,
+		isEnabled: dbApp.isEnabled,
+		isDefault: dbApp.isDefault,
 		requestConfig: {
 			apiBase: dbApp.apiBase,
 			apiKey: dbApp.apiKey,
@@ -51,6 +52,7 @@ export function appItemToDbApp(
 		description: appItem.info.description || null,
 		tags: appItem.info.tags.length > 0 ? JSON.stringify(appItem.info.tags) : null,
 		isEnabled: appItem.isEnabled,
+		isDefault: appItem.isDefault,
 		apiBase: appItem.requestConfig.apiBase,
 		apiKey: appItem.requestConfig.apiKey,
 		enableAnswerForm: appItem.answerForm?.enabled || false,

@@ -128,6 +128,8 @@ export const AppEditDrawer = (props: IAppEditDrawerProps) => {
 										mode: difyAppInfo.mode || values['info.mode'],
 									},
 									isEnabled: values['isEnabled'],
+									isDefault: values['isDefault'],
+									isDeleted: false,
 									requestConfig: {
 										apiBase: values.apiBase,
 										apiKey: values.apiKey,

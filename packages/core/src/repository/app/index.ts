@@ -1,5 +1,4 @@
 import { AppModeEnums } from '../../constants'
-import { EIsEnabled } from '../../enums'
 
 export interface IDifyAppRequestConfig {
 	/**
@@ -51,9 +50,17 @@ export interface IDifyAppItem {
 		tags: string[]
 	}
 	/**
-	 * 应用状态 1-启用 2-禁用
+	 * 应用状态
 	 */
-	isEnabled: EIsEnabled
+	isEnabled: boolean
+	/**
+	 * 是否默认应用
+	 */
+	isDefault: boolean
+	/**
+	 * 是否删除
+	 */
+	isDeleted: boolean
 	/**
 	 * 请求配置
 	 */

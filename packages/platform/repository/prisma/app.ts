@@ -9,7 +9,13 @@ import { IDifyAppItem } from '@/types'
  */
 export const getAppList = async (userId?: number): Promise<IDifyAppItem[]> => {
 	try {
-		let dbApps
+		const defaultApp = await prisma.difyApp.findFirst({
+			where: {
+				isDefault: true,
+			},
+		})
+		let dbApps = [defaultApp].filter(app => !!app)
+
 		if (userId) {
 			const userRoles = await prisma.userRole.findMany({
 				where: {
@@ -31,21 +37,33 @@ export const getAppList = async (userId?: number): Promise<IDifyAppItem[]> => {
 				},
 			})
 			const appIds = roleDifyApps.map(roleDifyApp => roleDifyApp.difyAppId)
-			dbApps = await prisma.difyApp.findMany({
+			const userDbApps = await prisma.difyApp.findMany({
 				where: {
 					id: {
 						in: appIds,
 					},
 				},
 			})
-			return dbApps.map(dbAppToAppItem)
-		} else {
-			dbApps = await prisma.difyApp.findMany({
-				orderBy: {
-					createdAt: 'desc',
-				},
-			})
+			dbApps = [...dbApps, ...userDbApps]
 		}
+
+		return dbApps.map(dbAppToAppItem)
+	} catch (error) {
+		console.error('Error fetching app list:', error)
+		throw new Error('Failed to fetch app list')
+	}
+}
+
+/**
+ * 获取应用分页列表数据
+ */
+export const getPagedAppList = async (): Promise<IDifyAppItem[]> => {
+	try {
+		const dbApps = await prisma.difyApp.findMany({
+			where: {
+				isDeleted: false,
+			},
+		})
 
 		return dbApps.map(dbAppToAppItem)
 	} catch (error) {
@@ -92,6 +110,17 @@ export const updateApp = async (app: IDifyAppItem): Promise<IDifyAppItem> => {
 	try {
 		const dbAppData = appItemToDbAppUpdate(app)
 		const { id, ...updateData } = dbAppData
+		if (updateData.isDefault) {
+			// 已移除有默认应用
+			await prisma.difyApp.updateMany({
+				where: {
+					isDefault: true,
+				},
+				data: {
+					isDefault: false,
+				},
+			})
+		}
 		const dbApp = await prisma.difyApp.update({
 			where: { id },
 			data: updateData,

@@ -28,7 +28,8 @@ export default function SettingForm(props: ISettingFormProps) {
 				enableAnswerForm: false,
 				enableUpdateInputAfterStarts: false,
 				openingStatementDisplayMode: 'default',
-				isEnabled: 1,
+				isEnabled: true,
+				isDefault: false,
 			}}
 		>
 			<div className="text-base mb-3 flex items-center">
@@ -123,11 +124,32 @@ export default function SettingForm(props: ISettingFormProps) {
 					options={[
 						{
 							label: '启用',
-							value: 1,
+							value: true,
 						},
 						{
 							label: '禁用',
-							value: 2,
+							value: false,
+						},
+					]}
+				/>
+			</Form.Item>
+			<Form.Item
+				name="isDefault"
+				label="默认应用"
+				tooltip="设置默认应用"
+				rules={[{ required: true, message: '默认应用不能为空' }]}
+				required
+			>
+				<Select
+					placeholder="请选择是否默认应用"
+					options={[
+						{
+							label: '是',
+							value: true,
+						},
+						{
+							label: '否',
+							value: false,
 						},
 					]}
 				/>

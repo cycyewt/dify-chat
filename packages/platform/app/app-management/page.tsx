@@ -81,7 +81,6 @@ export default function AppManagementPage() {
 					{
 						title: '名称',
 						dataIndex: 'info.name',
-						key: 'info.name',
 						width: 180,
 						fixed: 'left',
 						ellipsis: true,
@@ -92,7 +91,6 @@ export default function AppManagementPage() {
 					{
 						title: '类型',
 						dataIndex: 'info.mode',
-						key: 'info.mode',
 						width: 200,
 						render: (_mode: AppModeEnums, record) => {
 							return record.info.mode
@@ -103,7 +101,6 @@ export default function AppManagementPage() {
 					{
 						title: '描述',
 						dataIndex: 'info.description',
-						key: 'info.description',
 						width: 300,
 						ellipsis: true,
 						render: (_text, record) => {
@@ -113,7 +110,6 @@ export default function AppManagementPage() {
 					{
 						title: '标签',
 						dataIndex: 'info.tags',
-						key: 'info.tags',
 						width: 200,
 						render: (_text, record) => {
 							return record.info.tags?.length ? (
@@ -128,14 +124,21 @@ export default function AppManagementPage() {
 					{
 						title: '状态',
 						dataIndex: 'isEnabled',
-						key: 'isEnabled',
 						width: 140,
 						render: (_text, record) => {
-							return record.isEnabled === 1 ? (
+							return record.isEnabled ? (
 								<Tag color="success">已启用</Tag>
 							) : (
 								<Tag color="default">已禁用</Tag>
 							)
+						},
+					},
+					{
+						title: '默认应用',
+						dataIndex: 'isDefault',
+						width: 140,
+						render: (_text, record) => {
+							return record.isDefault ? '是' : '-'
 						},
 					},
 					{

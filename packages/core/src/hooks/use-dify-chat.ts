@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 
 import { AppModeEnums } from '../constants'
-import { EIsEnabled } from '../enums'
 import { DifyAppStore, DifyAppStoreReadonly, IDifyAppItem } from '../repository'
 
 export type IDifyChatMode = 'singleApp' | 'multiApp'
@@ -74,7 +73,9 @@ const DEFAULT_CONTEXT_VALUE_SINGLE_APP: IDifyChatContextSingleApp = {
 			apiBase: '',
 			apiKey: '',
 		},
-		isEnabled: EIsEnabled.enabled,
+		isEnabled: true,
+		isDefault: false,
+		isDeleted: false,
 		answerForm: {
 			enabled: false,
 			feedbackText: '',

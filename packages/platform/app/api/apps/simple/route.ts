@@ -5,6 +5,10 @@ import { prisma } from '@/lib/prisma'
 export const GET = async () => {
 	try {
 		const apps = await prisma.difyApp.findMany({
+			where: {
+				isDefault: false,
+				isDeleted: false,
+			},
 			select: {
 				id: true,
 				name: true,

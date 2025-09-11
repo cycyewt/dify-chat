@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 
-import { EIsEnabled } from '../enums'
 import { IDifyAppItem } from '../repository'
 import { IDifyAppParameters, IDifyAppSiteSetting } from '../types'
 
@@ -51,7 +50,9 @@ const DEFAULT_APP_CONTEXT: IAppContext = {
 	currentApp: {
 		config: {
 			id: '',
-			isEnabled: EIsEnabled.enabled,
+			isEnabled: true,
+			isDefault: false,
+			isDeleted: false,
 			info: {
 				name: '',
 				description: '',

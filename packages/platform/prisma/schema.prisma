@@ -18,9 +18,6 @@ model DifyApp {
   // JSON 字符串存储数组
   tags        String?
 
-  // 应用状态：1-启用，2-禁用
-  isEnabled Int? @default(1) @map("is_enabled")
-
   // 请求配置
   apiBase String @map("api_base")
   apiKey  String @map("api_key")
@@ -35,11 +32,16 @@ model DifyApp {
   // 扩展配置
   openingStatementDisplayMode String? @map("opening_statement_display_mode") // 'default' | 'always'
 
+  // 应用状态
+  isEnabled Boolean  @default(true) @map("is_enabled")
+  // 是否默认应用
+  isDefault Boolean  @default(false) @map("is_default")
   // 删除状态
   isDeleted Boolean  @default(false) @map("is_deleted")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([isEnabled, isDefault, isDeleted])
   @@map("dify_apps")
 }
 

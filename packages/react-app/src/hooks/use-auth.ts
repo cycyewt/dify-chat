@@ -47,7 +47,7 @@ export const useAuth = (): IAuth => {
 	const logout = async () => {
 		await logoutApi()
 		LocalStorageStore.remove(LocalStorageKeys.USER_INFO)
-		goAuthorize()
+		history.replace('apps')
 	}
 
 	return {
