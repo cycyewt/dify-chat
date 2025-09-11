@@ -1,8 +1,7 @@
-import { UserOutlined } from '@ant-design/icons'
 import { LucideIcon } from '@dify-chat/components'
 import { useIsMobile } from '@dify-chat/helpers'
 import { ThemeSelector, useThemeContext } from '@dify-chat/theme'
-import { Button, Dropdown, Space } from 'antd'
+import { Space } from 'antd'
 import classNames from 'classnames'
 import React from 'react'
 
@@ -54,7 +53,7 @@ export default function HeaderLayout(props: IHeaderLayoutProps) {
 	const { themeMode } = useThemeContext()
 	const isMobile = useIsMobile()
 	return (
-		<div className="h-16 flex items-center justify-between px-4">
+		<div className="h-16 flex items-center justify-between px-4 bg-[#f2f4f7]">
 			{/* 🌟 Logo */}
 			<HeaderSiderIcon align="left">
 				<Logo
@@ -70,21 +69,20 @@ export default function HeaderLayout(props: IHeaderLayoutProps) {
 
 			{/* 右侧图标 */}
 			<HeaderSiderIcon align="right">
-				{rightIcon || (
-					<Space
-						className="flex items-center"
-						size={16}
-					>
-						<ThemeSelector>
-							<div className="flex items-center cursor-pointer">
-								<LucideIcon
-									name={themeMode === 'dark' ? 'moon' : themeMode === 'light' ? 'sun' : 'monitor'}
-									size={20}
-								/>
-							</div>
-						</ThemeSelector>
-					</Space>
-				)}
+				<Space
+					className="flex items-center"
+					size={16}
+				>
+					<ThemeSelector>
+						<div className="flex items-center cursor-pointer">
+							<LucideIcon
+								name={themeMode === 'dark' ? 'moon' : themeMode === 'light' ? 'sun' : 'monitor'}
+								size={16}
+							/>
+						</div>
+					</ThemeSelector>
+					{rightIcon}
+				</Space>
 			</HeaderSiderIcon>
 		</div>
 	)

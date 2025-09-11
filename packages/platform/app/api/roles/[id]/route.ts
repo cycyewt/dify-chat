@@ -102,7 +102,11 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
 			return NextResponse.json({ message: '角色不存在' }, { status: 404 })
 		}
 
-		// TODO 检查角色关联的用户数量
+		// 禁止删除系统管理员
+		if (existingRole.code === 'admin') {
+			return NextResponse.json({ message: '禁止删除系统管理员角色' }, { status: 400 })
+		}
+
 		const userCount = await prisma.userRole.count({
 			where: {
 				roleId: id,

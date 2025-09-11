@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-	title: '管理后台',
-	description: '管理后台',
+	title: '管理系统',
+	description: '管理系统',
 }
 
 export default function RootLayout({

@@ -144,32 +144,33 @@ export default function RoleManagementPage() {
 		{
 			title: '操作',
 			key: 'actions',
-			render: (_: unknown, record) => (
-				<Space>
-					<Button
-						className={'!px-0'}
-						type="link"
-						onClick={() => handleEdit(record)}
-					>
-						编辑
-					</Button>
-					<Popconfirm
-						title="确认删除"
-						description="确定要删除这个角色吗？此操作不可恢复。"
-						onConfirm={() => handleDelete(record.id)}
-						okText="确定"
-						cancelText="取消"
-					>
+			render: (_: unknown, record) =>
+				record.code === 'admin' ? null : (
+					<Space>
 						<Button
 							className={'!px-0'}
 							type="link"
-							danger
+							onClick={() => handleEdit(record)}
 						>
-							删除
+							编辑
 						</Button>
-					</Popconfirm>
-				</Space>
-			),
+						<Popconfirm
+							title="确认删除"
+							description="确定要删除这个角色吗？此操作不可恢复。"
+							onConfirm={() => handleDelete(record.id)}
+							okText="确定"
+							cancelText="取消"
+						>
+							<Button
+								className={'!px-0'}
+								type="link"
+								danger
+							>
+								删除
+							</Button>
+						</Popconfirm>
+					</Space>
+				),
 		},
 	]
 

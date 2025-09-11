@@ -1,15 +1,7 @@
 'use client'
 
-import {
-	ApartmentOutlined,
-	AppstoreOutlined,
-	LogoutOutlined,
-	TeamOutlined,
-	UserOutlined,
-} from '@ant-design/icons'
-import { Button, Dropdown, message, Segmented, Space } from 'antd'
-import { MenuItemType } from 'antd/es/menu/interface'
-import { signOut, useSession } from 'next-auth/react'
+import { ApartmentOutlined, AppstoreOutlined, TeamOutlined } from '@ant-design/icons'
+import { message, Segmented, Space } from 'antd'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -49,8 +41,7 @@ const TopMenuOptions: ITopMenuOption[] = [
 
 export default function AdminHeaderTitle() {
 	const [activeKey, setActiveKey] = useState<ETopMenuKeys>()
-	const { data: session } = useSession()
-	const navigate = useRouter()
+	const router = useRouter()
 	const pathname = usePathname()
 
 	useEffect(() => {
@@ -59,20 +50,6 @@ export default function AdminHeaderTitle() {
 			setActiveKey(key)
 		}
 	}, [pathname])
-
-	const handleLogout = async () => {
-		await signOut({ redirect: false })
-		navigate.push('/login')
-	}
-
-	const menuItems: MenuItemType[] = [
-		{
-			key: 'logout',
-			icon: <LogoutOutlined />,
-			label: '退出登录',
-			onClick: handleLogout,
-		},
-	]
 
 	return (
 		<Space>
@@ -84,27 +61,15 @@ export default function AdminHeaderTitle() {
 				onChange={key => {
 					const route = TopMenuOptions.find(item => item.value === key)?.route
 					if (route) {
-						navigate.push(route)
+						router.push(route)
 					} else {
-						message.error('路径不存在')
+						message.open({
+							type: 'error',
+							content: '未找到该页面',
+						})
 					}
 				}}
 			/>
-			{session?.user && (
-				<Dropdown
-					menu={{ items: menuItems }}
-					placement="bottom"
-					arrow
-				>
-					<Button
-						type="text"
-						shape="round"
-						icon={<UserOutlined />}
-					>
-						{session.user.name || session.user.email}
-					</Button>
-				</Dropdown>
-			)}
 		</Space>
 	)
 }

@@ -2,7 +2,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import bcrypt from 'bcryptjs'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-import { prisma } from './prisma'
+import { prisma, userIsAdmin } from './prisma'
 
 export const authOptions = {
 	adapter: PrismaAdapter(prisma),
@@ -10,11 +10,12 @@ export const authOptions = {
 		CredentialsProvider({
 			name: 'credentials',
 			credentials: {
+				scene: { label: '场景', type: 'text' },
 				sn: { label: '账号', type: 'text' },
 				password: { label: '密码', type: 'password' },
 			},
 			async authorize(credentials) {
-				if (!credentials?.sn || !credentials?.password) {
+				if (!credentials?.scene || !credentials?.sn || !credentials?.password) {
 					return null
 				}
 
@@ -26,6 +27,12 @@ export const authOptions = {
 				})
 
 				if (!user) {
+					return null
+				}
+
+				// 如果没有管理员角色，不能登录管理系统，返回 null
+				const isAdmin = await userIsAdmin(user.id)
+				if (credentials.scene === 'admin' && !isAdmin) {
 					return null
 				}
 

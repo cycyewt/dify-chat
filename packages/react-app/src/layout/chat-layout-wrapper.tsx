@@ -1,4 +1,4 @@
-import { DownOutlined, InfoCircleTwoTone } from '@ant-design/icons'
+import { DownOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import {
 	AppContextProvider,
 	AppModeEnums,
@@ -236,7 +236,7 @@ const MultiAppLayout = () => {
 																	title={item.info.description}
 																	placement={'right'}
 																>
-																	<InfoCircleTwoTone />
+																	<InfoCircleOutlined />
 																</Tooltip>
 															),
 														}

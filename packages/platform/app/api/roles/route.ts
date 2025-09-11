@@ -85,9 +85,16 @@ export async function POST(request: NextRequest) {
 		}
 
 		// 检查账号是否已存在
-		const existingRole = await prisma.role.findUnique({
+		const existingRole = await prisma.role.findFirst({
 			where: {
-				code,
+				OR: [
+					{
+						name,
+					},
+					{
+						code,
+					},
+				],
 				isDeleted: false,
 			},
 		})

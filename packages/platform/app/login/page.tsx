@@ -19,11 +19,13 @@ export default function LoginPage() {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const callbackUrl = searchParams.get('callbackUrl')
+	const scene = callbackUrl ? 'client' : 'admin'
 
 	const onFinish = async (values: LoginForm) => {
 		setLoading(true)
 		try {
 			const result = await signIn('credentials', {
+				scene: scene,
 				sn: values.sn,
 				password: values.password,
 				redirect: false,
@@ -71,10 +73,10 @@ export default function LoginPage() {
 							src={LogoIcon}
 							width={64}
 							height={64}
-							alt="管理后台"
+							alt="管理系统"
 						/>
 					</div>
-					{!callbackUrl && <h1 className="text-2xl font-bold text-gray-900">管理后台</h1>}
+					{!callbackUrl && <h1 className="text-2xl font-bold text-gray-900">管理系统</h1>}
 					<p className="text-gray-600 mt-2">请登录您的账户</p>
 				</div>
 

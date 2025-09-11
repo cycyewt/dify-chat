@@ -29,7 +29,7 @@ export default function AuthPage() {
 							alt=""
 						/>
 					</div>
-					<div className="mt-8 text-center text-xl">正在跳转登录页面...</div>
+					<div className="mt-8 text-center text-xl">登录中...</div>
 				</Card>
 			</div>
 		</div>
