@@ -22,7 +22,9 @@ export default defineConfig({
 				process.env.PUBLIC_DIFY_PROXY_API_BASE,
 			),
 			// 登录地址
-			'process.env.PUBLIC_AUTH_URL': JSON.stringify(process.env.PUBLIC_AUTH_URL),
+			'process.env.PUBLIC_AUTH_LOGIN_URL': JSON.stringify(process.env.PUBLIC_AUTH_LOGIN_URL),
+			// 登出地址
+			'process.env.PUBLIC_AUTH_LOGOUT_URL': JSON.stringify(process.env.PUBLIC_AUTH_LOGOUT_URL),
 			// 登录 API 地址
 			'process.env.PUBLIC_AUTH_API_BASE': JSON.stringify(process.env.PUBLIC_AUTH_API_BASE),
 		},

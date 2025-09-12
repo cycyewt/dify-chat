@@ -1,6 +1,7 @@
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import React from 'react'
 
 import AuthSessionProvider from '@/components/auth/session-provider'
 import PageLayoutWrapper from '@/components/layout/page-layout-wrapper'

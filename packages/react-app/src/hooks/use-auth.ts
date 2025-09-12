@@ -2,7 +2,7 @@ import { LocalStorageKeys, LocalStorageStore } from '@dify-chat/helpers'
 import dayjs from 'dayjs'
 import { useHistory } from 'pure-react-router'
 
-import { getSessionApi, ISession, logoutApi } from '@/services/auth'
+import { getSessionApi, ISession } from '@/services/auth'
 
 export interface IAuth {
 	userInfo: ISession
@@ -45,9 +45,11 @@ export const useAuth = (): IAuth => {
 	 * 退出登录
 	 */
 	const logout = async () => {
-		await logoutApi()
 		LocalStorageStore.remove(LocalStorageKeys.USER_INFO)
-		history.replace('apps')
+		const url = new URL(window.location.href)
+		url.pathname = '/auth'
+		const callbackUrl = encodeURIComponent(url.href)
+		location.replace(`${process.env.PUBLIC_AUTH_LOGOUT_URL}?callbackUrl=${callbackUrl}`)
 	}
 
 	return {

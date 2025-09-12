@@ -15,13 +15,13 @@ const RedirectWrapper = () => {
 		const pathname = history.location.pathname
 
 		// 如果未登录，则跳转登录
-		if (!isAuthorized && pathname !== '/auth') {
-			// goAuthorize()
-			return
-		}
+		// if (!isAuthorized && pathname !== '/auth') {
+		// 	goAuthorize()
+		// 	return
+		// }
 
-		if (['', '/', '/login'].includes(pathname)) {
-			// redirect2Index()
+		if (['', '/'].includes(pathname)) {
+			redirect2Index()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [history.location.pathname, isAuthorized])

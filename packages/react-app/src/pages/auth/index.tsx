@@ -12,14 +12,15 @@ export default function AuthPage() {
 			LocalStorageStore.set(LocalStorageKeys.USER_INFO, decodeURIComponent(userInfo))
 			location.replace('/apps')
 		} else {
+			LocalStorageStore.remove(LocalStorageKeys.USER_INFO)
 			const callbackUrl = encodeURIComponent(window.location.href)
-			location.replace(`${process.env.PUBLIC_AUTH_URL}?callbackUrl=${callbackUrl}`)
+			location.replace(`${process.env.PUBLIC_AUTH_LOGIN_URL}?callbackUrl=${callbackUrl}`)
 		}
 	})
 
 	return (
 		<div className="w-screen h-screen flex flex-col items-center justify-center bg-theme-bg">
-			<div className="flex-col w-full h-full flex items-center justify-center">
+			<div className="flex flex-col items-center justify-center w-full h-full">
 				<Card className="w-full max-w-md">
 					<div className={'mt-2 text-center'}>
 						<img
@@ -29,7 +30,7 @@ export default function AuthPage() {
 							alt=""
 						/>
 					</div>
-					<div className="mt-8 text-center text-xl">登录中...</div>
+					<div className="mt-8 text-center text-lg">登录中...</div>
 				</Card>
 			</div>
 		</div>

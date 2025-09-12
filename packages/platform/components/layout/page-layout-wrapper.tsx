@@ -33,12 +33,12 @@ const ThemeContextWrapper = ({ children }: { children: React.ReactNode }) => {
  */
 export default function PageLayoutWrapper({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname()
-	const isLoginPage = pathname === '/login'
+	const isAuthPage = ['/login', '/logout'].includes(pathname)
 
 	return (
 		<ThemeContextProvider>
 			<ThemeContextWrapper>
-				{isLoginPage ? (
+				{isAuthPage ? (
 					children
 				) : (
 					<AuthGuard>

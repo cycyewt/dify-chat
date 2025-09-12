@@ -25,7 +25,7 @@ export default function AdminPageLayout(props: IAdminPageLayoutProps) {
 
 	const handleLogout = async () => {
 		await signOut({ redirect: false })
-		router.push('/login')
+		router.replace('/login')
 	}
 
 	const menuItems: MenuItemType[] = [

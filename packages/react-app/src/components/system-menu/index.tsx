@@ -1,18 +1,10 @@
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Dropdown } from 'antd'
-import { useState } from 'react'
 
 import { useAuth } from '@/hooks/use-auth.ts'
 
 export default function SystemMenu() {
 	const { userInfo, logout, goAuthorize } = useAuth()
-	const [logoutLoading, setLogoutLoading] = useState(false)
-
-	const handleLogout = async () => {
-		setLogoutLoading(true)
-		await logout()
-		setLogoutLoading(false)
-	}
 
 	return userInfo ? (
 		<Dropdown
@@ -22,7 +14,7 @@ export default function SystemMenu() {
 						key: 'logout',
 						icon: <LogoutOutlined />,
 						label: '退出登录',
-						onClick: handleLogout,
+						onClick: logout,
 					},
 				],
 			}}
@@ -33,7 +25,6 @@ export default function SystemMenu() {
 				type="text"
 				shape="round"
 				icon={<UserOutlined />}
-				loading={logoutLoading}
 			>
 				{userInfo.user.name || userInfo.user.id}
 			</Button>
