@@ -6,6 +6,7 @@ import { NextRequest } from 'next/server'
 import { createDifyResponseProxy } from '@/lib/api-utils'
 import { authOptions } from '@/lib/auth'
 import { getAppItem } from '@/repository/app'
+import { getUser } from '@/repository/user'
 
 /**
  * 发送完成消息（文本生成）
@@ -17,6 +18,7 @@ export async function POST(
 	try {
 		const { appId } = await params
 		const session = await getServerSession(authOptions)
+		const user = await getUser(session?.user.id)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
@@ -39,7 +41,7 @@ export async function POST(
 			},
 			body: JSON.stringify({
 				response_mode: 'streaming',
-				user: String(session?.user?.id ?? 0),
+				user: user?.sn ?? 'anonymous',
 				inputs,
 			}),
 		})

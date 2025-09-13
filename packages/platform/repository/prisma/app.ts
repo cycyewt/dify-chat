@@ -42,6 +42,7 @@ export const getAppList = async (userId?: number): Promise<IDifyAppItem[]> => {
 					id: {
 						in: appIds,
 					},
+					isDefault: false,
 				},
 			})
 			dbApps = [...dbApps, ...userDbApps]

@@ -112,13 +112,13 @@ export default function AppManagementPage() {
 						dataIndex: 'info.tags',
 						width: 200,
 						render: (_text, record) => {
-							return record.info.tags?.length ? (
-								<Space>
-									{record.info.tags.map((tag: string) => (
-										<Tag key={`${record.id}__${tag}`}>{tag}</Tag>
-									))}
-								</Space>
-							) : null
+							return record.info.tags?.length
+								? record.info.tags.map((tag: string) => (
+										<div key={tag}>
+											<Tag className="!m-0">{tag}</Tag>
+										</div>
+									))
+								: null
 						},
 					},
 					{
@@ -201,7 +201,7 @@ export default function AppManagementPage() {
 										}
 									}}
 								>
-									同步应用信息
+									同步信息
 								</Button>
 								<Popconfirm
 									title="确定删除该应用吗？"
@@ -229,6 +229,11 @@ export default function AppManagementPage() {
 						),
 					},
 				]}
+				pagination={{
+					size: 'default',
+					showQuickJumper: true,
+					showTotal: total => `共 ${total} 个应用`,
+				}}
 			/>
 
 			<AppEditDrawer

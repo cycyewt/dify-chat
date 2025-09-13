@@ -1,5 +1,5 @@
 import { AppModeOptions, OpeningStatementDisplayModeOptions } from '@dify-chat/core'
-import { Form, FormInstance, Input, Select } from 'antd'
+import { Form, FormInstance, Input, Select, Tag } from 'antd'
 
 import { IDifyAppItem } from '@/types'
 
@@ -102,12 +102,11 @@ export default function SettingForm(props: ISettingFormProps) {
 				/>
 			</Form.Item>
 			<Form.Item
-				name="info.tags"
 				label="应用标签"
 				hidden={mode === AppDetailDrawerModeEnum.create}
 			>
 				{appItem?.info.tags?.length ? (
-					<div className="text-theme-text">{appItem.info.tags.join(', ')}</div>
+					appItem?.info.tags.map(tag => <Tag key={tag}>{tag}</Tag>)
 				) : (
 					<>无</>
 				)}

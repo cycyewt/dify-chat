@@ -41,7 +41,9 @@ model DifyApp {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([isEnabled, isDefault, isDeleted])
+  @@index([isEnabled])
+  @@index([isDefault])
+  @@index([isDeleted])
   @@map("dify_apps")
 }
 
@@ -58,7 +60,9 @@ model Role {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([name, code, isDeleted])
+  @@index([name])
+  @@index([code])
+  @@index([isDeleted])
   @@map("roles")
 }
 
@@ -72,8 +76,25 @@ model RoleDifyApp {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([roleId, difyAppId, isDeleted])
+  @@index([roleId])
+  @@index([difyAppId])
+  @@index([isDeleted])
   @@map("role_dify_apps")
+}
+
+// 组织机构
+model Agency {
+  id        Int      @id @default(autoincrement())
+  name      String
+  parentId  Int      @map("parent_id")
+  level     Int      @db.TinyInt // 层级，0-一级，1-二级，2-三级，以此类推
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([parentId])
+  @@index([level])
+  @@fulltext([name])
+  @@map("agencies")
 }
 
 // 用户表 - 后台管理员和普通用户账户
@@ -84,8 +105,8 @@ model User {
   sn          String   @unique
   // 手机号
   phoneNumber String   @unique @map("phone_number")
-  // 工作单位
-  agency      String
+  // 工作单位 { id: number[], name: string }
+  agency      Json
   // 密码哈希
   password    String
   // 状态
@@ -95,7 +116,11 @@ model User {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  @@index([name, sn, phoneNumber, isEnabled, isDeleted])
+  @@index([name])
+  @@index([sn])
+  @@index([phoneNumber])
+  @@index([isEnabled])
+  @@index([isDeleted])
   @@map("users")
 }
 
@@ -108,6 +133,8 @@ model UserRole {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([userId, roleId, isDeleted])
+  @@index([userId])
+  @@index([roleId])
+  @@index([isDeleted])
   @@map("user_roles")
 }

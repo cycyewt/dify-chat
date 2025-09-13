@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ message: '名称、编码和描述都是必填项' }, { status: 400 })
 		}
 
-		// 检查账号是否已存在
+		// 检查用户是否已存在
 		const existingRole = await prisma.role.findFirst({
 			where: {
 				OR: [

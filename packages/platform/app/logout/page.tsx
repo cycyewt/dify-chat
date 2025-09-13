@@ -34,7 +34,7 @@ export default function LogoutPage() {
 							alt=""
 						/>
 					</div>
-					<div className="mt-8 text-center text-lg">退出登录中...</div>
+					<div className="mt-8 text-center text-lg">正在退出登录...</div>
 				</Card>
 			</div>
 		</div>

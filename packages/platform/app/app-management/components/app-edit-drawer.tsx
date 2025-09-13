@@ -49,6 +49,7 @@ export const AppEditDrawer = (props: IAppEditDrawerProps) => {
 				'info.description': appItem?.info.description,
 				'info.mode': appItem?.info.mode || AppModeEnums.CHATBOT,
 				isEnabled: appItem?.isEnabled,
+				isDefault: appItem?.isDefault,
 				enableAnswerForm: appItem?.answerForm?.enabled || false,
 				'answerForm.feedbackText': appItem?.answerForm?.feedbackText || '',
 				enableUpdateInputAfterStarts: appItem?.inputParams?.enableUpdateAfterCvstStarts || false,

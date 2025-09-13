@@ -80,16 +80,16 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ message: '未授权' }, { status: 401 })
 		}
 
-		const { name, sn, phoneNumber, agency, password, roles } = await request.json()
+		const { name, sn, phoneNumber, agency, agencyName, password, roles } = await request.json()
 
-		if (!name || !sn || !phoneNumber || !agency || !password) {
+		if (!name || !sn || !phoneNumber || !agency || !agencyName || !password) {
 			return NextResponse.json(
-				{ message: '姓名、账号、电话号码、工作单位和密码都是必填项' },
+				{ message: '姓名、警号、电话号码、工作单位和密码都是必填项' },
 				{ status: 400 },
 			)
 		}
 
-		// 检查账号是否已存在
+		// 检查警号是否已存在
 		const existingUser = await prisma.user.findUnique({
 			where: {
 				sn,
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
 		})
 
 		if (existingUser) {
-			return NextResponse.json({ message: '该账号已被使用' }, { status: 400 })
+			return NextResponse.json({ message: '该警号已被使用' }, { status: 400 })
 		}
 
 		// 加密密码
@@ -110,7 +110,10 @@ export async function POST(request: NextRequest) {
 				name,
 				sn,
 				phoneNumber,
-				agency,
+				agency: {
+					id: agency,
+					name: agencyName,
+				},
 				password: hashedPassword,
 			},
 			select: {

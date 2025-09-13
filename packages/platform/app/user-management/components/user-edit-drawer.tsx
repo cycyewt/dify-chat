@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Drawer, Form, Input, message, Select, Space } from 'antd'
+import { Button, Cascader, Drawer, Form, Input, message, Select, Space } from 'antd'
 import { useEffect, useState } from 'react'
 
 interface User {
@@ -8,7 +8,10 @@ interface User {
 	name: string
 	sn: string
 	phoneNumber: string
-	agency: string
+	agency: {
+		id: number[] | undefined
+		name: string
+	}
 	isEnabled: boolean
 	roles: { id: number; name: string; remark: string }[]
 	createdAt: string
@@ -19,6 +22,12 @@ interface UserRole {
 	id: number
 	name: string
 	remark: string
+}
+
+interface AgencyDisplay {
+	value: string
+	label: string
+	children: AgencyDisplay[]
 }
 
 interface UserEditDrawerProps {
@@ -32,7 +41,8 @@ interface UserFormData {
 	name: string
 	sn: string
 	phoneNumber: string
-	agency: string
+	agency: number[] | undefined
+	agencyName: string
 	password?: string
 	roles: number[]
 }
@@ -43,10 +53,11 @@ export default function UserEditDrawer({
 	onClose,
 	onSaveSuccess,
 }: UserEditDrawerProps) {
-	const [form] = Form.useForm()
+	const [form] = Form.useForm<UserFormData>()
 	const [loading, setLoading] = useState(false)
 	const isEditing = !!user
 	const [userRoles, setUserRoles] = useState<UserRole[]>([])
+	const [agencies, setAgencies] = useState<AgencyDisplay[]>([])
 
 	useEffect(() => {
 		if (visible) {
@@ -56,11 +67,19 @@ export default function UserEditDrawer({
 					name: user.name || '',
 					sn: user.sn || '',
 					phoneNumber: user.phoneNumber || '',
-					agency: user.agency || '',
+					agency: user.agency.id ?? undefined,
+					agencyName: user.name || '',
 					roles: user.roles.map(role => role.id),
 				})
 			} else {
-				form.resetFields()
+				form.setFieldsValue({
+					name: '',
+					sn: '',
+					phoneNumber: '',
+					agency: undefined,
+					agencyName: '',
+					roles: [],
+				})
 			}
 		}
 	}, [visible, user, form])
@@ -84,9 +103,30 @@ export default function UserEditDrawer({
 			})
 		}
 	}
+	const fetchAgencies = async () => {
+		try {
+			const response = await fetch('/api/agencies')
+			if (response.ok) {
+				const data = await response.json()
+				setAgencies(data)
+			} else {
+				message.open({
+					type: 'error',
+					content: '获取组织机构失败',
+				})
+			}
+		} catch (error) {
+			console.error('获取组织机构时发生错误', error)
+			message.open({
+				type: 'error',
+				content: '获取组织机构时发生错误',
+			})
+		}
+	}
 	useEffect(() => {
 		if (visible) {
 			fetchUserRoles()
+			fetchAgencies()
 		}
 	}, [visible])
 
@@ -164,7 +204,7 @@ export default function UserEditDrawer({
 
 				<Form.Item
 					name="sn"
-					label="账号"
+					label="警号"
 					required
 					rules={[
 						{
@@ -175,12 +215,12 @@ export default function UserEditDrawer({
 
 								return Promise.reject()
 							},
-							message: '请输入有效的账号',
+							message: '请输入有效的警号',
 						},
 					]}
 				>
 					<Input
-						placeholder="账号"
+						placeholder="警号"
 						allowClear
 					/>
 				</Form.Item>
@@ -209,15 +249,30 @@ export default function UserEditDrawer({
 				</Form.Item>
 
 				<Form.Item
-					name="agency"
+					name={'agency'}
 					label="工作单位"
 					rules={[{ required: true, message: '请输入工作单位' }]}
 				>
-					<Input
-						allowClear
-						placeholder="请输入工作单位"
+					<Cascader
+						placeholder="请选择工作单位"
+						options={agencies}
+						changeOnSelect
+						showSearch={{
+							filter: (inputValue, path) =>
+								path.some(option => option.label.toLowerCase().includes(inputValue.toLowerCase())),
+						}}
+						onChange={(value, selectedOptions) => {
+							if (selectedOptions?.length > 0) {
+								form.setFieldValue('agencyName', selectedOptions.at(-1)?.label ?? '')
+							}
+						}}
+						displayRender={(labels: string[]) => labels.at(-1)}
 					/>
 				</Form.Item>
+				<Form.Item
+					hidden
+					name={'agencyName'}
+				></Form.Item>
 
 				{isEditing ? (
 					<Form.Item

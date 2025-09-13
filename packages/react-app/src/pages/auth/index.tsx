@@ -5,9 +5,10 @@ import { Card } from 'antd'
 import LogoImage from '@/assets/images/logo.png'
 
 export default function AuthPage() {
+	const url = new URL(window.location.href)
+	const userInfo = url.searchParams.get('userInfo')
+
 	useMount(() => {
-		const url = new URL(window.location.href)
-		const userInfo = url.searchParams.get('userInfo')
 		if (userInfo) {
 			LocalStorageStore.set(LocalStorageKeys.USER_INFO, decodeURIComponent(userInfo))
 			location.replace('/apps')
@@ -30,7 +31,7 @@ export default function AuthPage() {
 							alt=""
 						/>
 					</div>
-					<div className="mt-8 text-center text-lg">登录中...</div>
+					<div className="mt-8 text-center text-lg">{userInfo ? '请稍候' : '登录中'}...</div>
 				</Card>
 			</div>
 		</div>

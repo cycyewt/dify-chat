@@ -211,7 +211,6 @@ export default function RoleManagementPage() {
 				loading={loading}
 				pagination={{
 					size: 'default',
-					showSizeChanger: true,
 					showQuickJumper: true,
 					showTotal: total => `共 ${total} 个角色`,
 				}}

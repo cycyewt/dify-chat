@@ -34,7 +34,7 @@ export default function LoginPage() {
 			if (result?.error) {
 				message.open({
 					type: 'error',
-					content: '登录失败，请检查账号和密码',
+					content: '登录失败，请检查警号和密码',
 				})
 			} else {
 				message.open({
@@ -97,13 +97,13 @@ export default function LoginPage() {
 
 									return Promise.reject()
 								},
-								message: '请输入有效的账号',
+								message: '请输入有效的警号',
 							},
 						]}
 					>
 						<Input
 							prefix={<UserOutlined />}
-							placeholder="账号"
+							placeholder="警号"
 							allowClear
 						/>
 					</Form.Item>

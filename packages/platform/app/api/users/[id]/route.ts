@@ -23,11 +23,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
 		let { id } = await params
 		id = Number(id)
-		const { name, sn, phoneNumber, agency, password, roles } = await request.json()
+		const { name, sn, phoneNumber, agency, agencyName, password, roles } = await request.json()
 
-		if (!name || !sn || !phoneNumber || !agency) {
+		if (!name || !sn || !phoneNumber || !agency || !agencyName) {
 			return NextResponse.json(
-				{ message: '姓名、账号、电话号码、工作单位和密码都是必填项' },
+				{ message: '姓名、警号、电话号码、工作单位和密码都是必填项' },
 				{ status: 400 },
 			)
 		}
@@ -47,7 +47,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 		})
 
 		if (snUser && snUser.id !== id) {
-			return NextResponse.json({ message: '该账号已被其他用户使用' }, { status: 400 })
+			return NextResponse.json({ message: '该警号已被其他用户使用' }, { status: 400 })
 		}
 
 		// 准备更新数据
@@ -55,7 +55,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 			name,
 			sn,
 			phoneNumber,
-			agency,
+			agency: {
+				id: agency,
+				name: agencyName,
+			},
 		}
 
 		// 如果提供了密码，则更新密码
@@ -102,7 +105,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 // 删除用户
 export async function DELETE(_request: NextRequest, { params }: RouteParams) {
 	try {
-		const session = (await getServerSession(authOptions)) as { user: { id: number } }
+		const session = await getServerSession(authOptions)
 
 		if (!session) {
 			return NextResponse.json({ message: '未授权' }, { status: 401 })
@@ -112,7 +115,7 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
 		id = Number(id)
 
 		// 检查是否尝试删除自己
-		if (session.user?.id === id) {
+		if (session?.user?.id === id) {
 			return NextResponse.json({ message: '不能删除自己的账户' }, { status: 400 })
 		}
 

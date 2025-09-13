@@ -13,7 +13,10 @@ interface User {
 	name: string
 	sn: string
 	phoneNumber: string
-	agency: string
+	agency: {
+		id: number[] | undefined
+		name: string
+	}
 	isEnabled: boolean
 	roles: { id: number; name: string; remark: string }[]
 	createdAt: string
@@ -125,6 +128,9 @@ export default function UserManagementPage() {
 			title: '工作单位',
 			dataIndex: 'agency',
 			width: 220,
+			render: (_: unknown, record) => {
+				return record.agency.name
+			},
 		},
 		{
 			title: '已分配角色',
@@ -202,7 +208,7 @@ export default function UserManagementPage() {
 					>
 						用户管理
 					</Title>
-					<p className="mt-1 text-gray-600">管理系统用户账号</p>
+					<p className="mt-1 text-gray-600">管理系统用户</p>
 				</div>
 				<Space>
 					<Button
@@ -230,7 +236,6 @@ export default function UserManagementPage() {
 				loading={loading}
 				pagination={{
 					size: 'default',
-					showSizeChanger: true,
 					showQuickJumper: true,
 					showTotal: total => `共 ${total} 个用户`,
 				}}

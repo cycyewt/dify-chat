@@ -33,12 +33,9 @@ export function AppInfo() {
 			<div className="flex items-center px-4 mt-3">
 				<AppIcon />
 				<div className="px-3 box-border flex-1 overflow-hidden">
-					<div className="text-theme-text text-sm truncate">{info4Render.name}</div>
+					<h2 className="m-0 text-theme-text text-sm truncate">{info4Render.name}</h2>
 					{info4Render.description ? (
-						<div
-							className="text-sm text-desc truncate"
-							title={info4Render.description}
-						>
+						<div className="text-sm text-desc line-clamp-2 cursor-default">
 							{info4Render.description}
 						</div>
 					) : null}

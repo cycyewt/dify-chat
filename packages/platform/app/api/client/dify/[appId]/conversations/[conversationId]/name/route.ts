@@ -6,6 +6,7 @@ import { NextRequest } from 'next/server'
 import { createDifyApiResponse, handleApiError, proxyDifyRequest } from '@/lib/api-utils'
 import { authOptions } from '@/lib/auth'
 import { getAppItem } from '@/repository/app'
+import { getUser } from '@/repository/user'
 
 /**
  * 重命名会话
@@ -17,6 +18,7 @@ export async function POST(
 	try {
 		const { appId, conversationId } = await params
 		const session = await getServerSession(authOptions)
+		const user = await getUser(session?.user.id)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
@@ -47,7 +49,7 @@ export async function POST(
 				body: JSON.stringify({
 					name,
 					auto_generate,
-					user: String(session?.user?.id ?? 0),
+					user: user?.sn ?? 'anonymous',
 				}),
 			},
 		)
