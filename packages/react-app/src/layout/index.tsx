@@ -1,3 +1,4 @@
+import { LocalStorageKeys, LocalStorageStore } from '@dify-chat/helpers'
 import { useMount } from 'ahooks'
 import { Route, useHistory, useSearchParams } from 'pure-react-router'
 import { useEffect, useState } from 'react'
@@ -11,6 +12,8 @@ const RedirectWrapper = () => {
 
 	useEffect(() => {
 		const pathname = history.location.pathname
+
+		LocalStorageStore.remove(LocalStorageKeys.USER_ID)
 
 		if (['', '/'].includes(pathname)) {
 			history.push('apps')

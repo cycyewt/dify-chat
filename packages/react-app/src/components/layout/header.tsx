@@ -1,10 +1,10 @@
 import { useIsMobile } from '@dify-chat/helpers'
-import { ThemeSelector, useThemeContext } from '@dify-chat/theme'
+// import { ThemeSelector, useThemeContext } from '@dify-chat/theme'
 import { Space } from 'antd'
 import classNames from 'classnames'
 import React from 'react'
 
-import { LucideIcon } from '@/components'
+// import { LucideIcon } from '@/components'
 
 import CenterTitleWrapper from './center-title-wrapper'
 import { Logo } from './logo'
@@ -55,7 +55,7 @@ const HeaderSiderIcon = (props: { align: 'left' | 'right'; children: React.React
  */
 export default function HeaderLayout(props: IHeaderLayoutProps) {
 	const { isTitleWrapped, title, rightIcon, logoText, renderLogo, renderRightHeader } = props
-	const { themeMode } = useThemeContext()
+	// const { themeMode } = useThemeContext()
 	const isMobile = useIsMobile()
 	return (
 		<div className="h-16 flex items-center justify-between px-4">
@@ -79,14 +79,14 @@ export default function HeaderLayout(props: IHeaderLayoutProps) {
 						className="flex items-center"
 						size={16}
 					>
-						<ThemeSelector>
-							<div className="flex items-center cursor-pointer">
-								<LucideIcon
-									name={themeMode === 'dark' ? 'moon' : themeMode === 'light' ? 'sun' : 'monitor'}
-									size={16}
-								/>
-							</div>
-						</ThemeSelector>
+						{/*<ThemeSelector>*/}
+						{/*	<div className="flex items-center cursor-pointer">*/}
+						{/*		<LucideIcon*/}
+						{/*			name={themeMode === 'dark' ? 'moon' : themeMode === 'light' ? 'sun' : 'monitor'}*/}
+						{/*			size={16}*/}
+						{/*		/>*/}
+						{/*	</div>*/}
+						{/*</ThemeSelector>*/}
 						{renderRightHeader?.()}
 					</Space>
 				)}

@@ -49,7 +49,7 @@ export const useAuth = (): IAuth => {
 	const logout = async () => {
 		LocalStorageStore.remove(LocalStorageKeys.USER_INFO)
 		const url = new URL(window.location.href)
-		url.pathname = '/auth'
+		url.pathname = '/apps'
 		const callbackUrl = encodeURIComponent(url.href)
 		location.replace(`${process.env.PUBLIC_AUTH_LOGOUT_URL}?callbackUrl=${callbackUrl}`)
 	}

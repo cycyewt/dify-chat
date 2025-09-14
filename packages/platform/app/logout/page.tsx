@@ -18,7 +18,7 @@ export default function LogoutPage() {
 		if (callbackUrl) {
 			const url = new URL(callbackUrl)
 			url.searchParams.delete('userInfo')
-			router.replace(`/login?callbackUrl=${encodeURIComponent(url.href)}`)
+			router.replace(url.href)
 		}
 	})
 

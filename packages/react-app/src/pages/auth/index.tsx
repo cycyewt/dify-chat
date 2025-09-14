@@ -6,11 +6,14 @@ import LogoImage from '@/assets/images/logo.png'
 
 export default function AuthPage() {
 	const url = new URL(window.location.href)
-	const userInfo = url.searchParams.get('userInfo')
+	let userInfo = url.searchParams.get('userInfo')
 
 	useMount(() => {
 		if (userInfo) {
-			LocalStorageStore.set(LocalStorageKeys.USER_INFO, decodeURIComponent(userInfo))
+			userInfo = decodeURIComponent(userInfo)
+			const userInfoObj = JSON.parse(decodeURIComponent(userInfo))
+			LocalStorageStore.set(LocalStorageKeys.USER_ID, userInfoObj.user.id)
+			LocalStorageStore.set(LocalStorageKeys.USER_INFO, userInfo)
 			location.replace('/apps')
 		} else {
 			LocalStorageStore.remove(LocalStorageKeys.USER_INFO)
