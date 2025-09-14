@@ -1,8 +1,11 @@
 'use server'
 
+import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
 
+import { authOptions } from '@/lib/auth'
 import { getAppItem } from '@/repository/app'
+import { getUser } from '@/repository/user'
 
 /**
  * 代理 Dify API 的会话列表请求
@@ -29,7 +32,9 @@ export async function GET(
 		const limit = searchParams.get('limit') || '100'
 		const last_id = searchParams.get('last_id')
 		const sort_by = searchParams.get('sort_by')
-		const user = searchParams.get('user')
+		const param_user = searchParams.get('user') || 'anonymous'
+		const session = await getServerSession(authOptions)
+		const user = await getUser(session?.user.id)
 
 		const fullSearchParams = new URLSearchParams()
 		if (limit) {
@@ -41,9 +46,7 @@ export async function GET(
 		if (sort_by) {
 			fullSearchParams.append('sort_by', sort_by)
 		}
-		if (user) {
-			fullSearchParams.append('user', user)
-		}
+		fullSearchParams.append('user', user?.sn || param_user)
 
 		// 转发请求到 Dify API
 		const response = await fetch(

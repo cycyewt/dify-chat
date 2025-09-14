@@ -1,12 +1,14 @@
 'use server'
 
-import { getServerSession } from 'next-auth/next'
 import { NextRequest } from 'next/server'
 
-import { createDifyApiResponse, handleApiError, proxyDifyRequest } from '@/lib/api-utils'
-import { authOptions } from '@/lib/auth'
+import {
+	createDifyApiResponse,
+	getUserIdFromRequest,
+	handleApiError,
+	proxyDifyRequest,
+} from '@/lib/api-utils'
 import { getAppItem } from '@/repository/app'
-import { getUser } from '@/repository/user'
 
 /**
  * 停止聊天消息生成
@@ -17,14 +19,15 @@ export async function POST(
 ) {
 	try {
 		const { appId, taskId } = await params
-		const session = await getServerSession(authOptions)
-		const user = await getUser(session?.user.id)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
 		if (!app) {
 			return createDifyApiResponse({ error: 'App not found' }, 404)
 		}
+
+		// 获取用户ID
+		const userId = await getUserIdFromRequest(request)
 
 		// 代理请求到 Dify API
 		const response = await proxyDifyRequest(
@@ -34,7 +37,7 @@ export async function POST(
 			{
 				method: 'POST',
 				body: JSON.stringify({
-					user: user?.sn ?? 'anonymous',
+					user: userId,
 				}),
 			},
 		)

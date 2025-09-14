@@ -2,63 +2,56 @@
 
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Input, message } from 'antd'
-import { getSession, signIn } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import LogoIcon from '@/assets/images/logo.png'
 
-interface LoginForm {
+interface PasswordForm {
 	sn: string
 	password: string
+	newPassword: string
 }
 
-export default function LoginPage() {
+export default function PasswordPage() {
 	const [loading, setLoading] = useState(false)
 	const router = useRouter()
-	const searchParams = useSearchParams()
-	const callbackUrl = searchParams.get('callbackUrl')
-	const scene = callbackUrl ? 'client' : 'admin'
 
-	const onFinish = async (values: LoginForm) => {
+	const onFinish = async (values: PasswordForm) => {
 		setLoading(true)
 		try {
-			const result = await signIn('credentials', {
-				scene: scene,
-				sn: values.sn,
-				password: values.password,
-				redirect: false,
+			const result = await fetch('/api/password', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					sn: values.sn,
+					password: values.password,
+					newPassword: values.newPassword,
+				}),
 			})
 
-			if (result?.error) {
-				message.open({
-					type: 'error',
-					content: '登录失败，请检查警号和密码',
-				})
-			} else {
+			if (result.ok) {
 				message.open({
 					type: 'success',
-					content: '登录成功',
+					content: '修改成功',
 				})
-				// 获取会话信息并跳转
-				const session = await getSession()
-				if (session) {
-					if (callbackUrl) {
-						const url = new URL(callbackUrl)
-						url.searchParams.append('userInfo', encodeURIComponent(JSON.stringify(session)))
-						router.replace(url.href)
-					} else {
-						router.push('/')
-					}
-				}
+				// 返回
+				router.back()
+			} else {
+				message.open({
+					type: 'error',
+					content: '修改失败，请检查警号和密码',
+				})
 			}
 		} catch (error) {
-			console.error('登录过程中发生错误', error)
+			console.error('修改过程中发生错误', error)
 			message.open({
 				type: 'error',
-				content: '登录过程中发生错误',
+				content: '修改过程中发生错误',
 			})
 		} finally {
 			setLoading(false)
@@ -77,16 +70,14 @@ export default function LoginPage() {
 							alt="管理系统"
 						/>
 					</div>
-					{!callbackUrl && (
-						<h1 className="text-2xl font-bold text-gray-900 dark:text-gray-500">管理系统</h1>
-					)}
-					<p className="text-gray-600 mt-2">请登录您的账户</p>
+					<h1 className="text-2xl font-bold text-gray-900 dark:text-gray-500">修改密码</h1>
+					<p className="text-gray-600 mt-2">请妥善保存新密码</p>
 				</div>
 
 				<Form
 					name="login"
 					onFinish={onFinish}
-					autoComplete="off"
+					autoComplete="new-password"
 					size="large"
 				>
 					<Form.Item
@@ -107,17 +98,31 @@ export default function LoginPage() {
 						<Input
 							prefix={<UserOutlined />}
 							placeholder="警号"
+							autoComplete="new-password"
 							allowClear
 						/>
 					</Form.Item>
 
 					<Form.Item
 						name="password"
-						rules={[{ required: true, message: '请输入密码' }]}
+						rules={[{ required: true, message: '请输入旧密码' }]}
 					>
 						<Input.Password
 							prefix={<LockOutlined />}
-							placeholder="密码"
+							placeholder="旧密码"
+							autoComplete="new-password"
+							allowClear
+						/>
+					</Form.Item>
+
+					<Form.Item
+						name="newPassword"
+						rules={[{ required: true, message: '请输入新密码' }]}
+					>
+						<Input.Password
+							prefix={<LockOutlined />}
+							placeholder="新密码"
+							autoComplete="new-password"
 							allowClear
 						/>
 					</Form.Item>
@@ -129,13 +134,13 @@ export default function LoginPage() {
 							className="w-full"
 							loading={loading}
 						>
-							登录
+							确定
 						</Button>
 					</Form.Item>
 				</Form>
 
 				<div className="flex justify-center items-center">
-					<Link href="/password">修改密码</Link>
+					<a onClick={() => router.back()}>返回</a>
 				</div>
 			</Card>
 		</div>

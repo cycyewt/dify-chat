@@ -6,7 +6,8 @@ import {
 	ICurrentApp,
 	IDifyAppItem,
 } from '@dify-chat/core'
-import { useIsMobile } from '@dify-chat/helpers'
+import { LocalStorageKeys, LocalStorageStore, useIsMobile } from '@dify-chat/helpers'
+import Fingerprint from '@fingerprintjs/fingerprintjs'
 import { useMount, useRequest } from 'ahooks'
 import { Dropdown, message, Tooltip } from 'antd'
 import { useHistory, useParams } from 'pure-react-router'
@@ -26,7 +27,7 @@ const MultiAppLayout = () => {
 	const history = useHistory()
 	const { userInfo } = useAuth()
 	console.log('userInfo', userInfo)
-	const userId = userInfo?.user.id
+	let userId = userInfo?.user.id ?? LocalStorageStore.get(LocalStorageKeys.USER_ID)
 
 	const [difyApi] = useState(
 		createDifyApiInstance({
@@ -57,7 +58,7 @@ const MultiAppLayout = () => {
 				if (isMobile) {
 					// 移动端如果没有应用，直接跳转应用列表页
 					if (!result?.length) {
-						history.replace('/apps')
+						history.replace('apps')
 						return Promise.resolve([])
 					}
 				}
@@ -111,6 +112,15 @@ const MultiAppLayout = () => {
 	 * 初始化应用信息
 	 */
 	const initApp = async () => {
+		if (!userId) {
+			// 生成匿名 userId
+			const fp = await Fingerprint.load()
+			const result = await fp.get()
+			userId = result.visitorId
+		}
+		LocalStorageStore.set(LocalStorageKeys.USER_ID, userId)
+		console.log('initApp userId', userId)
+
 		const appItem = await appService.getAppByID(selectedAppId)
 		if (!appItem) {
 			return

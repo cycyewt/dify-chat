@@ -5,6 +5,7 @@ import { useHistory } from 'pure-react-router'
 import { getSessionApi, ISession } from '@/services/auth'
 
 export interface IAuth {
+	userId: string
 	userInfo: ISession
 	isAuthorized: boolean
 	goAuthorize: () => void
@@ -19,6 +20,7 @@ export const useAuth = (): IAuth => {
 	const history = useHistory()
 	const userInfo: ISession = LocalStorageStore.get(LocalStorageKeys.USER_INFO)
 	const expires = userInfo?.expires
+	const browserUserId = LocalStorageStore.get(LocalStorageKeys.USER_ID)
 
 	const isAuthorized = !!expires && dayjs().isBefore(dayjs(expires))
 
@@ -53,6 +55,7 @@ export const useAuth = (): IAuth => {
 	}
 
 	return {
+		userId: browserUserId,
 		userInfo,
 		isAuthorized,
 		goAuthorize,

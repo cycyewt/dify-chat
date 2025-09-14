@@ -2,7 +2,12 @@
 
 import { NextRequest } from 'next/server'
 
-import { createDifyApiResponse, handleApiError, proxyDifyRequest } from '@/lib/api-utils'
+import {
+	createDifyApiResponse,
+	getUserIdFromRequest,
+	handleApiError,
+	proxyDifyRequest,
+} from '@/lib/api-utils'
 import { getAppItem } from '@/repository/app'
 
 /**
@@ -21,7 +26,8 @@ export async function POST(
 			return createDifyApiResponse({ error: 'App not found' }, 404)
 		}
 		// 获取请求体
-		const { rating, content, user } = await request.json()
+		const userId = await getUserIdFromRequest(new NextRequest(request.clone()))
+		const { rating, content } = await request.json()
 
 		// 代理请求到 Dify API
 		const response = await proxyDifyRequest(
@@ -31,7 +37,7 @@ export async function POST(
 			{
 				method: 'POST',
 				body: JSON.stringify({
-					user,
+					user: userId,
 					rating,
 					content,
 				}),

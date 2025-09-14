@@ -1,17 +1,15 @@
 'use server'
 
-import { getServerSession } from 'next-auth/next'
 import { NextRequest } from 'next/server'
 
 import {
 	createDifyApiResponse,
 	createDifyResponseProxy,
+	getUserIdFromRequest,
 	handleApiError,
 	proxyDifyRequest,
 } from '@/lib/api-utils'
-import { authOptions } from '@/lib/auth'
 import { getAppItem } from '@/repository/app'
-import { getUser } from '@/repository/user'
 
 /**
  * 获取工作流运行结果
@@ -59,8 +57,6 @@ export async function POST(
 ) {
 	try {
 		const { appId } = await params
-		const session = await getServerSession(authOptions)
-		const user = await getUser(session?.user.id)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
@@ -72,6 +68,7 @@ export async function POST(
 		}
 
 		// 获取请求体
+		const userId = await getUserIdFromRequest(new NextRequest(request.clone()))
 		const { inputs } = await request.json()
 
 		// 代理请求到 Dify API
@@ -83,7 +80,7 @@ export async function POST(
 			},
 			body: JSON.stringify({
 				response_mode: 'streaming',
-				user: user?.sn ?? 'anonymous',
+				user: userId,
 				inputs,
 			}),
 		})

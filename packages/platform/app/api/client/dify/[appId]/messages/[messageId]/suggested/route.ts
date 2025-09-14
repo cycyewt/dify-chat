@@ -2,7 +2,12 @@
 
 import { NextRequest } from 'next/server'
 
-import { createDifyApiResponse, handleApiError, proxyDifyRequest } from '@/lib/api-utils'
+import {
+	createDifyApiResponse,
+	getUserIdFromRequest,
+	handleApiError,
+	proxyDifyRequest,
+} from '@/lib/api-utils'
 import { getAppItem } from '@/repository/app'
 
 /**
@@ -22,13 +27,13 @@ export async function GET(
 		}
 
 		// 获取用户ID
-		const user = request.nextUrl.searchParams.get('user')
+		const userId = await getUserIdFromRequest(new NextRequest(request.clone()))
 
 		// 代理请求到 Dify API
 		const response = await proxyDifyRequest(
 			app.requestConfig.apiBase,
 			app.requestConfig.apiKey,
-			`/messages/${messageId}/suggested?user=${user}`,
+			`/messages/${messageId}/suggested?user=${userId}`,
 		)
 
 		const result = await response.json()

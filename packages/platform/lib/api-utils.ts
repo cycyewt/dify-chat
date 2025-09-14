@@ -1,5 +1,9 @@
 import { IDifyAppItem } from '@dify-chat/core'
+import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
+
+import { authOptions } from '@/lib/auth'
+import { getUser } from '@/repository/user'
 
 /**
  * 统一的 API 错误处理
@@ -91,10 +95,6 @@ export async function createFormDataProxy(request: NextRequest) {
  * 统一的 Dify API 响应格式
  */
 export function createDifyApiResponse<T>(data: T, status = 200) {
-	if (data === null) {
-		return NextResponse.json(null, { status: 200 })
-	}
-
 	return NextResponse.json(
 		{
 			code: status,
@@ -107,7 +107,30 @@ export function createDifyApiResponse<T>(data: T, status = 200) {
 /**
  * 从请求中获取用户ID（简化版本，实际项目中可能需要从session或token中获取）
  */
-export function getUserIdFromRequest(request: NextRequest): string {
+export async function getUserIdFromRequest(request: NextRequest): Promise<string> {
+	let userId = 'anonymous'
+
+	if (request.method.toLowerCase() === 'get') {
+		// 从URL参数中获取用户ID
+		const searchParams = request.nextUrl.searchParams
+		userId = searchParams.get('user') ?? userId
+	} else if (request.method.toLowerCase() === 'post') {
+		// 从请求体中获取用户ID
+		const body = await request.json()
+		userId = body.user ?? userId
+	}
+
+	// 如果已登录，获取用户sn作为用户ID
+	const session = await getServerSession(authOptions)
+	if (session) {
+		const user = await getUser(session?.user.id)
+		if (user) {
+			userId = user.sn
+		}
+	}
+
+	return userId
+
 	// 这里简化处理，实际项目中应该从认证信息中获取
-	return request.headers.get('x-user-id') || 'anonymous'
+	// return request.headers.get('x-user-id') || 'anonymous'
 }

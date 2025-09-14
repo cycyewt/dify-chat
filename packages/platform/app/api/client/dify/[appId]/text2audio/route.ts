@@ -1,12 +1,9 @@
 'use server'
 
-import { getServerSession } from 'next-auth/next'
 import { NextRequest } from 'next/server'
 
-import { createDifyResponseProxy } from '@/lib/api-utils'
-import { authOptions } from '@/lib/auth'
+import { createDifyResponseProxy, getUserIdFromRequest } from '@/lib/api-utils'
 import { getAppItem } from '@/repository/app'
-import { getUser } from '@/repository/user'
 
 /**
  * 文字转音频
@@ -17,8 +14,6 @@ export async function POST(
 ) {
 	try {
 		const { appId } = await params
-		const session = await getServerSession(authOptions)
-		const user = await getUser(session?.user.id)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
@@ -30,6 +25,7 @@ export async function POST(
 		}
 
 		// 获取请求体
+		const userId = await getUserIdFromRequest(new NextRequest(request.clone()))
 		const body = await request.json()
 		const { message_id, text } = body
 
@@ -43,7 +39,7 @@ export async function POST(
 			body: JSON.stringify({
 				message_id,
 				text,
-				user: user?.sn ?? 'anonymous',
+				user: userId,
 			}),
 		})
 

@@ -3,25 +3,17 @@ import { Route, useHistory, useSearchParams } from 'pure-react-router'
 import { useEffect, useState } from 'react'
 
 import { useAuth } from '@/hooks/use-auth'
-import { useRedirect2Index } from '@/hooks/use-jump'
 import { useGlobalStore } from '@/store'
 
 const RedirectWrapper = () => {
 	const history = useHistory()
-	const { isAuthorized, goAuthorize } = useAuth()
-	const redirect2Index = useRedirect2Index()
+	const { isAuthorized } = useAuth()
 
 	useEffect(() => {
 		const pathname = history.location.pathname
 
-		// 如果未登录，则跳转登录
-		// if (!isAuthorized && pathname !== '/auth') {
-		// 	goAuthorize()
-		// 	return
-		// }
-
 		if (['', '/'].includes(pathname)) {
-			redirect2Index()
+			history.push('apps')
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [history.location.pathname, isAuthorized])

@@ -53,7 +53,7 @@ export default function HeaderLayout(props: IHeaderLayoutProps) {
 	const { themeMode } = useThemeContext()
 	const isMobile = useIsMobile()
 	return (
-		<div className="h-16 flex items-center justify-between px-4 bg-[#f2f4f7]">
+		<div className="h-16 flex items-center justify-between px-4 bg-[#f2f4f7] dark:bg-[#1d1d1d]">
 			{/* 🌟 Logo */}
 			<HeaderSiderIcon align="left">
 				<Logo

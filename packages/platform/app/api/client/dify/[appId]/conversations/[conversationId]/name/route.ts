@@ -1,12 +1,14 @@
 'use server'
 
-import { getServerSession } from 'next-auth/next'
 import { NextRequest } from 'next/server'
 
-import { createDifyApiResponse, handleApiError, proxyDifyRequest } from '@/lib/api-utils'
-import { authOptions } from '@/lib/auth'
+import {
+	createDifyApiResponse,
+	getUserIdFromRequest,
+	handleApiError,
+	proxyDifyRequest,
+} from '@/lib/api-utils'
 import { getAppItem } from '@/repository/app'
-import { getUser } from '@/repository/user'
 
 /**
  * 重命名会话
@@ -17,8 +19,6 @@ export async function POST(
 ) {
 	try {
 		const { appId, conversationId } = await params
-		const session = await getServerSession(authOptions)
-		const user = await getUser(session?.user.id)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
@@ -27,6 +27,7 @@ export async function POST(
 		}
 
 		// 获取请求体
+		const userId = await getUserIdFromRequest(new NextRequest(request.clone()))
 		const { name, auto_generate } = await request.json()
 
 		if (!conversationId) {
@@ -43,13 +44,14 @@ export async function POST(
 		const response = await proxyDifyRequest(
 			app.requestConfig.apiBase,
 			app.requestConfig.apiKey,
-			`/conversations/${conversationId.toUpperCase()}/name`,
+			`/conversations/${conversationId}/name`,
 			{
 				method: 'POST',
 				body: JSON.stringify({
+					conversation_id: conversationId,
 					name,
 					auto_generate,
-					user: user?.sn ?? 'anonymous',
+					user: userId,
 				}),
 			},
 		)

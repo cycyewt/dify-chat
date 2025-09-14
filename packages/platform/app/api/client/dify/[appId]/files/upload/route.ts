@@ -2,7 +2,12 @@
 
 import { NextRequest } from 'next/server'
 
-import { createDifyApiResponse, createFormDataProxy, handleApiError } from '@/lib/api-utils'
+import {
+	createDifyApiResponse,
+	createFormDataProxy,
+	getUserIdFromRequest,
+	handleApiError,
+} from '@/lib/api-utils'
 import { getAppItem } from '@/repository/app'
 
 /**
@@ -22,7 +27,9 @@ export async function POST(
 		}
 
 		// 构建代理 FormData
+		const userId = await getUserIdFromRequest(new NextRequest(request.clone()))
 		const proxyFormData = await createFormDataProxy(request)
+		proxyFormData.set('user', userId)
 
 		// 代理请求到 Dify API
 		const response = await fetch(`${app.requestConfig.apiBase}/files/upload`, {

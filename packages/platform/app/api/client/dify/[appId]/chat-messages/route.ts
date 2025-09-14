@@ -1,11 +1,9 @@
 'use server'
 
-import { getServerSession } from 'next-auth/next'
 import { NextRequest, NextResponse } from 'next/server'
 
-import { authOptions } from '@/lib/auth'
+import { getUserIdFromRequest } from '@/lib/api-utils'
 import { getAppItem } from '@/repository/app'
-import { getUser } from '@/repository/user'
 
 /**
  * 代理 Dify API 的聊天消息请求
@@ -20,8 +18,6 @@ export async function POST(
 ) {
 	try {
 		const { appId } = await params
-		const session = await getServerSession(authOptions)
-		const user = await getUser(session?.user.id)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
@@ -30,6 +26,7 @@ export async function POST(
 		}
 
 		// 从请求中获取数据
+		const userId = await getUserIdFromRequest(new NextRequest(request.clone()))
 		const data = await request.json()
 
 		// 转发请求到 Dify API
@@ -41,7 +38,7 @@ export async function POST(
 			},
 			body: JSON.stringify({
 				...data,
-				user: user?.sn ?? 'anonymous',
+				user: userId,
 			}),
 		})
 

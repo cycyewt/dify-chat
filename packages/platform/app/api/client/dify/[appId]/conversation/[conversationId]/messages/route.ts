@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 
+import { getUserIdFromRequest } from '@/lib/api-utils'
 import { getAppItem } from '@/repository/app'
 
 /**
@@ -31,14 +32,11 @@ export async function GET(
 			return NextResponse.json({ error: 'App not found' }, { status: 404 })
 		}
 
-		const user = request.nextUrl.searchParams.get('user')
-		if (!user) {
-			return NextResponse.json({ error: 'User not found' }, { status: 404 })
-		}
+		const userId = await getUserIdFromRequest(new NextRequest(request.clone()))
 
 		const fullSearchParams = new URLSearchParams()
 		fullSearchParams.append('conversation_id', conversationId)
-		fullSearchParams.append('user', user)
+		fullSearchParams.append('user', userId)
 		if (first_id) {
 			fullSearchParams.append('first_id', first_id)
 		}

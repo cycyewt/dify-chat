@@ -1,12 +1,14 @@
 'use server'
 
-import { getServerSession } from 'next-auth/next'
 import { NextRequest } from 'next/server'
 
-import { createDifyApiResponse, handleApiError, proxyDifyRequest } from '@/lib/api-utils'
-import { authOptions } from '@/lib/auth'
+import {
+	createDifyApiResponse,
+	getUserIdFromRequest,
+	handleApiError,
+	proxyDifyRequest,
+} from '@/lib/api-utils'
 import { getAppItem } from '@/repository/app'
-import { getUser } from '@/repository/user'
 
 /**
  * 删除会话
@@ -17,8 +19,6 @@ export async function DELETE(
 ) {
 	try {
 		const { appId, conversationId } = await params
-		const session = await getServerSession(authOptions)
-		const user = await getUser(session?.user.id)
 
 		// 获取应用配置
 		const app = await getAppItem(appId)
@@ -26,20 +26,23 @@ export async function DELETE(
 			return createDifyApiResponse({ error: 'App not found' }, 404)
 		}
 
+		// 获取用户ID
+		const userId = await getUserIdFromRequest(request)
+
 		// 代理请求到 Dify API
-		const response = await proxyDifyRequest(
+		await proxyDifyRequest(
 			app.requestConfig.apiBase,
 			app.requestConfig.apiKey,
 			`/conversations/${conversationId}`,
 			{
 				method: 'DELETE',
 				body: JSON.stringify({
-					user: user?.sn ?? 'anonymous',
+					user: userId,
 				}),
 			},
 		)
 
-		return createDifyApiResponse<null>(null, response.status)
+		return createDifyApiResponse({}, 200)
 	} catch (error) {
 		const resolvedParams = await params
 		return handleApiError(

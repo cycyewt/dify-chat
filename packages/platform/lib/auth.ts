@@ -44,6 +44,7 @@ export const authOptions = {
 
 				return {
 					id: user.id,
+					sn: user.sn,
 					name: user.name,
 				}
 			},
