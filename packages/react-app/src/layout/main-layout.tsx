@@ -15,6 +15,10 @@ interface IMainLayoutProps {
 	 */
 	extComponents?: React.ReactNode
 	/**
+	 * 自定义 Logo 渲染
+	 */
+	renderLogo?: () => React.ReactNode
+	/**
 	 * 自定义中心标题
 	 */
 	renderCenterTitle?: (appInfo?: IDifyAppItem['info']) => React.ReactNode
@@ -48,6 +52,7 @@ const MainLayout = (props: IMainLayoutProps) => {
 			) : (
 				<CommonLayout
 					initLoading={props.initLoading}
+					renderLogo={props.renderLogo}
 					renderCenterTitle={props.renderCenterTitle}
 					extComponents={props.extComponents}
 					renderRightHeader={props.renderRightHeader}

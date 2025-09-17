@@ -14,7 +14,7 @@ export default function AuthPage() {
 			const userInfoObj = JSON.parse(decodeURIComponent(userInfo))
 			LocalStorageStore.set(LocalStorageKeys.USER_ID, userInfoObj.user.id)
 			LocalStorageStore.set(LocalStorageKeys.USER_INFO, userInfo)
-			location.replace('/apps')
+			location.replace('/chat')
 		} else {
 			LocalStorageStore.remove(LocalStorageKeys.USER_INFO)
 			const callbackUrl = encodeURIComponent(window.location.href)

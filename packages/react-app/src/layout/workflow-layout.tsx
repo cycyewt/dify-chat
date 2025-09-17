@@ -249,9 +249,9 @@ export default function WorkflowLayout(props: IWorkflowLayoutProps) {
 		<div className="block md:flex md:items-stretch w-full h-full overflow-y-auto md:overflow-y-hidden">
 			{/* 参数填写区域 */}
 			<div className="md:flex-1 overflow-hidden border-0 border-r border-solid border-theme-border pb-6 md:pb-0">
-				<div className="px-2">
-					<AppInfo />
-				</div>
+				{/*<div className="px-2">*/}
+				{/*	<AppInfo />*/}
+				{/*</div>*/}
 				<div className="px-6 mt-6">
 					<AppInputForm
 						onStartConversation={values => {
@@ -304,7 +304,7 @@ export default function WorkflowLayout(props: IWorkflowLayoutProps) {
 
 			{/* 文本生成结果渲染 */}
 			{appMode === AppModeEnums.TEXT_GENERATOR && (
-				<div className="md:flex-1 px-4 pt-6 overflow-x-hidden overflow-y-auto bg-theme-bg">
+				<div className="md:flex-1 px-4 pt-6 overflow-x-hidden overflow-y-auto">
 					{textGenerateStatus === 'init' ? (
 						<div className="w-full h-full flex items-center justify-center">
 							<Empty description={`点击 "运行" 试试看`} />

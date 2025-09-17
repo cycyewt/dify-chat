@@ -79,7 +79,7 @@ export default function PasswordPage() {
 									alt="AI应用平台"
 								/>
 							</div>
-							<p className="text-gray-600 mt-2">修改密码，请妥善保存</p>
+							<p className="text-lg text-gray-700 mt-2">修改密码，请妥善保存</p>
 						</div>
 
 						<Form

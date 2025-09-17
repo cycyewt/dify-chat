@@ -272,6 +272,7 @@ export const MessageSender = (props: IMessageSenderProps) => {
 					</Badge>
 				) : null
 			}
+			placeholder="给应用发送消息"
 			style={{
 				boxShadow: isLight ? '0px -2px 12px 4px var(--theme-border-color)' : 'none',
 			}}

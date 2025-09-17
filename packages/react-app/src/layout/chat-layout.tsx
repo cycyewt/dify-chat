@@ -35,9 +35,17 @@ import { useLatest } from '@/hooks/use-latest'
 
 interface IChatLayoutProps {
 	/**
+	 * 是否正在加载应用配置
+	 */
+	initLoading: boolean
+	/**
 	 * 扩展的 JSX 元素, 如抽屉/弹窗等
 	 */
 	extComponents?: React.ReactNode
+	/**
+	 * 自定义 Logo 渲染
+	 */
+	renderLogo?: () => React.ReactNode
 	/**
 	 * 自定义中心标题
 	 */
@@ -47,17 +55,14 @@ interface IChatLayoutProps {
 	 */
 	renderRightHeader?: () => React.ReactNode
 	/**
-	 * 是否正在加载应用配置
-	 */
-	initLoading: boolean
-	/**
 	 * Dify API 实例
 	 */
 	difyApi: DifyApi
 }
 
 export default function ChatLayout(props: IChatLayoutProps) {
-	const { extComponents, renderCenterTitle, initLoading, difyApi, renderRightHeader } = props
+	const { extComponents, renderLogo, renderCenterTitle, initLoading, difyApi, renderRightHeader } =
+		props
 	const [sidebarOpen, setSidebarOpen] = useState(true)
 	const { themeMode, setThemeMode } = useThemeContext()
 	const { appLoading, currentApp } = useAppContext()
@@ -372,9 +377,10 @@ export default function ChatLayout(props: IChatLayoutProps) {
 				currentConversationInfo,
 			}}
 		>
-			<div className={`w-full h-screen flex flex-col overflow-hidden bg-theme-bg`}>
+			<div className={`w-full h-screen flex flex-col overflow-hidden`}>
 				{/* 头部 */}
 				<HeaderLayout
+					renderLogo={renderLogo}
 					title={renderCenterTitle?.(currentApp?.config?.info)}
 					rightIcon={
 						isMobile ? (
@@ -391,10 +397,11 @@ export default function ChatLayout(props: IChatLayoutProps) {
 					}
 					logoText={''}
 					renderRightHeader={renderRightHeader}
+					isTitleWrapped
 				/>
 
 				{/* Main */}
-				<div className="flex-1 overflow-hidden flex rounded-t-3xl bg-theme-main-bg">
+				<div className="flex-1 overflow-hidden flex bg-theme-main-bg">
 					{appLoading || initLoading ? (
 						<div className="absolute w-full h-full left-0 top-0 z-50 flex items-center justify-center">
 							<Spin spinning />
@@ -407,7 +414,7 @@ export default function ChatLayout(props: IChatLayoutProps) {
 							>
 								{sidebarOpen ? (
 									<>
-										{currentApp.config.info ? <AppInfo /> : null}
+										{/*{currentApp.config.info ? <AppInfo /> : null}*/}
 										{/* 添加会话 */}
 										{currentApp ? (
 											<Button
@@ -416,36 +423,39 @@ export default function ChatLayout(props: IChatLayoutProps) {
 													onAddConversation()
 												}}
 												type="default"
-												className="h-10 leading-10 rounded-lg border border-solid border-gray-200 mt-3 mx-4 text-theme-text "
+												className="h-10 leading-10 rounded-lg border border-solid border-gray-200 mt-4 mx-4 text-theme-text "
 												icon={<PlusOutlined className="" />}
 											>
 												新增对话
 											</Button>
 										) : null}
 										{/* 🌟 对话管理 */}
-										<div className="px-4 mt-3 flex-1 overflow-auto">
+										<div className="px-4 mt-4 flex-1 overflow-auto">
 											{conversationListWithEmpty}
 										</div>
 									</>
 								) : (
-									<div className="flex flex-col justify-start items-center flex-1 pt-6">
+									<div className="flex flex-col justify-start items-center flex-1 pt-3">
 										{/* 应用图标 */}
-										<div className="mb-1.5 flex items-center justify-center">
-											<AppIcon size="small" />
-										</div>
+										{/*<div className="mb-1.5 flex items-center justify-center">*/}
+										{/*	<AppIcon size="small" />*/}
+										{/*</div>*/}
 
 										{/* 新增对话 */}
 										<Tooltip
 											title="新增对话"
 											placement="right"
 										>
-											<div className="text-theme-text my-1.5 hover:text-primary flex items-center">
+											<div className="flex items-center justify-center py-1.5 w-full">
 												<LucideIcon
 													name="plus-circle"
 													strokeWidth={1}
 													size={28}
-													className="cursor-pointer"
+													className="hover:text-primary cursor-pointer"
 													onClick={() => {
+														if (isTempId(currentConversationId)) {
+															return
+														}
 														onAddConversation()
 													}}
 												/>
@@ -462,9 +472,9 @@ export default function ChatLayout(props: IChatLayoutProps) {
 											placement="rightTop"
 										>
 											{/* 必须包裹一个 HTML 标签才能正常展示 Popover */}
-											<div className="flex items-center justify-center">
+											<div className="flex items-center justify-center py-1.5 w-full">
 												<LucideIcon
-													className="my-1.5 cursor-pointer hover:text-primary"
+													className="hover:text-primary cursor-pointer"
 													strokeWidth={1}
 													size={28}
 													name="menu"

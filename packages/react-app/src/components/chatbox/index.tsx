@@ -5,10 +5,11 @@ import { DifyApi, IFile, IMessageItem4Render } from '@dify-chat/api'
 import { OpeningStatementDisplayMode, Roles, useAppContext } from '@dify-chat/core'
 import { isTempId, useIsMobile } from '@dify-chat/helpers'
 import { useThemeContext } from '@dify-chat/theme'
-import { FormInstance, GetProp, message, Spin } from 'antd'
+import { Button, FormInstance, GetProp, message, Spin } from 'antd'
 import { useDeferredValue, useEffect, useMemo, useRef } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
+import { useGlobalAppListStore } from '@/store/global-app-list.ts'
 import { validateAndGenErrMsgs } from '@/utils'
 
 import LucideIcon from '../lucide-icon'
@@ -116,6 +117,7 @@ export const Chatbox = (props: ChatboxProps) => {
 		hasMore,
 		onLoadMore,
 	} = props
+	const globalAppListStore = useGlobalAppListStore()
 	const isMobile = useIsMobile()
 	const { currentApp } = useAppContext()
 	const { isDark } = useThemeContext()
@@ -354,12 +356,18 @@ export const Chatbox = (props: ChatboxProps) => {
 					</InfiniteScroll>
 				</div>
 				<div
-					className="absolute bottom-0 bg-theme-main-bg w-full md:!w-4/5 lg:!w-3/4 xl:!w-3/5  left-1/2"
+					className="absolute bg-theme-main-bg w-full md:!w-4/5 lg:!w-3/4 xl:!w-3/5  left-1/2"
 					style={{
-						transform: 'translateX(-50%)',
+						transform:
+							messageItems.length === 0 ? 'translate3d(-50%, -50%, 0)' : 'translateX(-50%)',
+						top: messageItems.length === 0 ? '50%' : 'auto',
+						bottom: messageItems.length === 0 ? 'auto' : 0,
 					}}
 				>
 					{/* 🌟 输入框 */}
+					{messageItems.length === 0 && (
+						<div className={'mb-8 text-2xl text-center font-semibold'}>今天有什么可以帮到你？</div>
+					)}
 					<div className="px-11">
 						<MessageSender
 							onSubmit={async (...params) => {
@@ -381,8 +389,28 @@ export const Chatbox = (props: ChatboxProps) => {
 							onCancel={onCancel}
 						/>
 					</div>
-					<div className="text-theme-desc text-sm text-center h-8 leading-8 truncate">
-						{currentApp?.site?.custom_disclaimer || '内容由 AI 生成, 仅供参考'}
+					<div className="px-11 text-theme-desc text-sm text-center leading-8 truncate">
+						{messageItems.length > 0 ? (
+							currentApp?.site?.custom_disclaimer || '内容由 AI 生成，仅供参考'
+						) : (
+							<div className={'flex justify-center gap-3 flex-wrap pt-6'}>
+								{globalAppListStore.globalAppList
+									.filter(app => app.id !== currentApp?.config.id)
+									.map(app => {
+										return (
+											<Button
+												shape={'round'}
+												key={app.id}
+												onClick={() => {
+													globalAppListStore.setGlobalAppId(app.id)
+												}}
+											>
+												{app.info.name}
+											</Button>
+										)
+									})}
+							</div>
+						)}
 					</div>
 				</div>
 			</div>

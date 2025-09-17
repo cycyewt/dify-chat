@@ -1,4 +1,4 @@
-import { DownOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import { CaretDownOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import {
 	AppContextProvider,
 	AppModeEnums,
@@ -14,13 +14,16 @@ import { useHistory, useParams } from 'pure-react-router'
 import { useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 
+import LogoImage from '@/assets/images/logo.png'
 import { LucideIcon } from '@/components'
 import { isDebugMode } from '@/components/debug-mode'
 import SystemMenu from '@/components/system-menu'
 import { useAuth } from '@/hooks/use-auth'
 import appService from '@/services/app'
+import { useGlobalAppListStore } from '@/store/global-app-list.ts'
 import { createDifyApiInstance, DifyApi } from '@/utils/dify-api'
 
+import AppIcon from '../components/chatbox/app-icon.tsx'
 import MainLayout from './main-layout'
 
 const MultiAppLayout = () => {
@@ -40,6 +43,7 @@ const MultiAppLayout = () => {
 	const [selectedAppId, setSelectedAppId] = useState<string>('')
 	const [initLoading, setInitLoading] = useState(false)
 	const [appList, setAppList] = useState<IDifyAppItem[]>([])
+	const globalAppListStore = useGlobalAppListStore()
 
 	const { appId } = useParams<{ appId: string }>()
 	const [currentApp, setCurrentApp] = useState<ICurrentApp>()
@@ -54,6 +58,7 @@ const MultiAppLayout = () => {
 			onSuccess: result => {
 				flushSync(() => {
 					setAppList(result)
+					globalAppListStore.setGlobalAppList(result)
 				})
 				if (isMobile) {
 					// 移动端如果没有应用，直接跳转应用列表页
@@ -163,6 +168,9 @@ const MultiAppLayout = () => {
 	useEffect(() => {
 		initApp()
 	}, [selectedAppId])
+	useEffect(() => {
+		setSelectedAppId(globalAppListStore.globalAppId)
+	}, [globalAppListStore.globalAppId])
 
 	const isMobile = useIsMobile()
 
@@ -185,28 +193,14 @@ const MultiAppLayout = () => {
 				<MainLayout
 					difyApi={difyApi}
 					initLoading={initLoading}
-					renderCenterTitle={() => {
+					renderLogo={() => {
 						return (
 							<div className="flex items-center overflow-hidden">
-								<LucideIcon
-									name="layout-grid"
-									size={16}
-									className="mr-1"
-								/>
-								<span
-									className="cursor-pointer inline-block shrink-0"
-									onClick={() => {
-										history.push('apps')
-									}}
-								>
-									应用列表
-								</span>
 								{selectedAppId ? (
 									<div className="flex items-center overflow-hidden">
-										<div className="mx-2 font-normal text-desc">/</div>
 										<Dropdown
 											arrow
-											placement="bottom"
+											placement="bottomLeft"
 											trigger={['hover']}
 											forceRender={true}
 											menu={{
@@ -254,11 +248,23 @@ const MultiAppLayout = () => {
 												],
 											}}
 										>
-											<div className="cursor-pointer flex-1 flex items-center overflow-hidden">
-												<span className="cursor-pointer w-full inline-block truncate">
-													{currentApp?.config?.info?.name}
-												</span>
-												<DownOutlined className="ml-1 w-2 h-2 text-gray-500" />
+											<div className="flex-1 flex items-center overflow-hidden cursor-pointer">
+												<div className="flex items-center text-base font-semibold cursor-pointer truncate">
+													<AppIcon />
+													<div className={'ml-2'}>
+														<div>
+															{currentApp?.config?.info?.name}
+															<CaretDownOutlined className="ml-1 w-3 h-3 text-gray-500" />
+														</div>
+														<div
+															className={
+																'text-sm text-desc font-normal max-w-[220px] truncate cursor-default'
+															}
+														>
+															{currentApp?.config?.info?.description}
+														</div>
+													</div>
+												</div>
 											</div>
 										</Dropdown>
 									</div>
@@ -266,6 +272,14 @@ const MultiAppLayout = () => {
 							</div>
 						)
 					}}
+					renderCenterTitle={() => (
+						<img
+							className="w-8 h-8 inline-block"
+							src={LogoImage}
+							draggable={false}
+							alt="logo"
+						/>
+					)}
 					renderRightHeader={() => <SystemMenu />}
 				/>
 			</>

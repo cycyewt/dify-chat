@@ -87,7 +87,7 @@ export default function LoginPage() {
 									alt="AI应用平台"
 								/>
 							</div>
-							<p className="text-gray-600 mt-2">请登录您的账户</p>
+							<p className="text-lg text-gray-700 mt-2">请登录你的账户</p>
 						</div>
 
 						<Form

@@ -22,7 +22,7 @@ export default function SystemMenu() {
 			arrow
 		>
 			<Button
-				type="text"
+				type="primary"
 				shape="round"
 				icon={<UserOutlined />}
 			>
@@ -31,7 +31,7 @@ export default function SystemMenu() {
 		</Dropdown>
 	) : (
 		<Button
-			type="text"
+			type="primary"
 			shape="round"
 			icon={<UserOutlined />}
 			onClick={goAuthorize}
