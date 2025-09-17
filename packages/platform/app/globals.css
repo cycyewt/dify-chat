@@ -120,3 +120,11 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+.auth-bg {
+	position: fixed;
+	inset: 0;
+	background-image: linear-gradient(transparent 31px, #dadada 32px), linear-gradient(90deg, transparent 31px, #dadada 32px);
+	background-size: 32px 32px, 32px 32px;
+	mask-image: radial-gradient(ellipse at 50% 40%, #000 55%, transparent 90%);
+}

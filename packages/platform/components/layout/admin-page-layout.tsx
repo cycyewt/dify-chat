@@ -40,13 +40,13 @@ export default function AdminPageLayout(props: IAdminPageLayoutProps) {
 	return (
 		<PageLayout
 			headerProps={{
-				logoText: '管理系统',
+				logoText: 'AI应用平台管理系统',
 				renderLogo: () => (
 					<Image
 						src={LogoIcon}
 						width={32}
 						height={32}
-						alt="管理系统"
+						alt="AI应用平台管理系统"
 					/>
 				),
 				isTitleWrapped: true,

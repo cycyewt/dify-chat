@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-	title: '管理系统',
-	description: '管理系统',
+	title: 'AI应用平台',
+	description: 'AI应用平台',
 }
 
 export default function RootLayout({
