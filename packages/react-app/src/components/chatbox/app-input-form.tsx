@@ -204,6 +204,7 @@ export default function AppInputForm(props: IAppInputFormProps) {
 												placeholder="请输入"
 												maxLength={item.max_length}
 												disabled={disabled}
+												allowClear
 											/>
 										) : item.type === 'select' ? (
 											<Select
@@ -217,12 +218,14 @@ export default function AppInputForm(props: IAppInputFormProps) {
 														}
 													}) || []
 												}
+												allowClear
 											/>
 										) : item.type === 'paragraph' ? (
 											<Input.TextArea
 												placeholder="请输入"
 												disabled={disabled}
 												maxLength={item.max_length}
+												allowClear
 											/>
 										) : item.type === 'number' ? (
 											<InputNumber
