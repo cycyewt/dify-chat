@@ -23,12 +23,11 @@ async function createAdmin() {
 	const name = await question('请输入管理员姓名: ')
 	const sn = await question('请输入管理员账号: ')
 	const phoneNumber = await question('请输入管理员手机号: ')
-	const agency = await question('请输入管理员单位: ')
 	const password = await question('请输入管理员密码: ')
 
 	// 验证输入
-	if (!name || !sn || !phoneNumber || !password || !agency) {
-		console.log('姓名、账号、手机号、工作单位和密码都不能为空')
+	if (!name || !sn || !phoneNumber || !password) {
+		console.log('姓名、账号、手机号和密码都不能为空')
 		rl.close()
 		return
 	}
@@ -63,14 +62,29 @@ async function createAdmin() {
 	// 加密密码
 	const hashedPassword = await bcrypt.hash(password, 12)
 
+	const role = await prisma.role.create({
+		data: {
+			name: '管理员',
+			code: 'admin',
+			remark: '系统管理员',
+		},
+	})
+
 	// 创建管理员账户
 	const admin = await prisma.user.create({
 		data: {
 			name,
 			sn,
 			phoneNumber,
-			agency,
+			agency: { id: [0], name: '默认单位' },
 			password: hashedPassword,
+		},
+	})
+
+	await prisma.userRole.create({
+		data: {
+			userId: admin.id,
+			roleId: role.id,
 		},
 	})
 
@@ -78,7 +92,7 @@ async function createAdmin() {
 	console.log(`姓名: ${admin.name}`)
 	console.log(`账号: ${admin.sn}`)
 	console.log(`手机号: ${admin.phoneNumber}`)
-	console.log(`工作单位: ${admin.agency}`)
+	console.log(`工作单位: 默认单位`)
 	console.log(`密码: ${password}`)
 
 	rl.close()
