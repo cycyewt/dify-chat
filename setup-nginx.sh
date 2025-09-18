@@ -28,12 +28,11 @@ fi
 echo -e "\n${GREEN}📝 配置 Nginx...${NC}"
 
 # 如果需要修改域名，可以在这里设置
-read -p "请输入域名或IP地址 (默认: localhost): " DOMAIN
-DOMAIN=${DOMAIN:-localhost}
+DOMAIN=${127.0.0.1:-localhost}
 
 # 复制配置文件并替换域名
 sudo cp nginx/dify-chat.conf /etc/nginx/sites-available/dify-chat
-sudo sed -i "s/your-domain.com/$DOMAIN/g" /etc/nginx/sites-available/dify-chat
+#sudo sed -i "s/your-domain.com/$DOMAIN/g" /etc/nginx/sites-available/dify-chat
 
 # 创建符号链接
 sudo ln -sf /etc/nginx/sites-available/dify-chat /etc/nginx/sites-enabled/
