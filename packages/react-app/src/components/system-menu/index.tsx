@@ -23,6 +23,7 @@ export default function SystemMenu() {
 		>
 			<Button
 				type="primary"
+				ghost
 				shape="round"
 				icon={<UserOutlined />}
 			>
