@@ -88,6 +88,7 @@ export default function AppListPage() {
 										} else {
 											Modal.info({
 												title: '提示',
+												content: '暂无 Dify 应用配置，请联系管理员',
 											})
 										}
 									}}
@@ -115,7 +116,7 @@ export default function AppListPage() {
 										} else {
 											Modal.info({
 												title: '提示',
-												content: '暂无应用，请联系管理员',
+												content: '暂无 Dify 应用配置，请联系管理员',
 											})
 										}
 									}}
