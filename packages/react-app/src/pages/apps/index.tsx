@@ -1,6 +1,6 @@
 import { LockOutlined } from '@ant-design/icons'
 import { useRequest } from 'ahooks'
-import { Button, Card, ConfigProvider, message, Modal, Spin } from 'antd'
+import { Button, Card, ConfigProvider, message, Modal, Spin, Tooltip } from 'antd'
 import { createStyles } from 'antd-style'
 import { useHistory } from 'pure-react-router'
 
@@ -79,22 +79,30 @@ export default function AppListPage() {
 									className: styles.defaultButton,
 								}}
 							>
-								<Button
-									size={'large'}
-									className={'w-40'}
-									onClick={() => {
-										if (list && list.length > 0) {
-											history.push(`apps/${list[0].id}`)
-										} else {
-											Modal.info({
-												title: '提示',
-												content: '暂无 Dify 应用配置，请联系管理员',
-											})
-										}
-									}}
+								<Tooltip
+									title={
+										list && list.length > 0
+											? list[0].info.description
+											: '暂无 Dify 应用配置，请联系管理员'
+									}
 								>
-									基础功能
-								</Button>
+									<Button
+										size={'large'}
+										className={'w-40'}
+										onClick={() => {
+											if (list && list.length > 0) {
+												history.push(`apps/${list[0].id}`)
+											} else {
+												Modal.info({
+													title: '提示',
+													content: '暂无 Dify 应用配置，请联系管理员',
+												})
+											}
+										}}
+									>
+										基础功能
+									</Button>
+								</Tooltip>
 							</ConfigProvider>
 							<ConfigProvider
 								button={{
