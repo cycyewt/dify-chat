@@ -1,7 +1,7 @@
 'use client'
 
-import { PlusOutlined, ReloadOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, message, Popconfirm, Space, Table, TableColumnsType, Tag } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import { Button, Input, message, Popconfirm, Space, Table, TableColumnsType, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
@@ -30,13 +30,20 @@ export default function UserManagementPage() {
 	const [drawerVisible, setDrawerVisible] = useState(false)
 	const [editingUser, setEditingUser] = useState<User | null>(null)
 
+	const [keyword, setKeyword] = useState('')
+	const [page, setPage] = useState(1)
+	const [pageSize, setPageSize] = useState(10)
+	const [total, setTotal] = useState(0)
 	const fetchUsers = async () => {
 		setLoading(true)
 		try {
-			const response = await fetch('/api/users')
+			const response = await fetch(
+				`/api/users?keyword=${keyword}&page=${page}&pageSize=${pageSize}`,
+			)
 			if (response.ok) {
 				const data = await response.json()
-				setUsers(data)
+				setUsers(data.rows)
+				setTotal(data.total)
 			} else {
 				message.open({
 					type: 'error',
@@ -103,7 +110,7 @@ export default function UserManagementPage() {
 
 	useEffect(() => {
 		fetchUsers()
-	}, [])
+	}, [keyword, page, pageSize])
 
 	const columns: TableColumnsType<User> = [
 		{
@@ -111,13 +118,10 @@ export default function UserManagementPage() {
 			dataIndex: 'name',
 			key: 'name',
 			render: (name: string, record) => (
-				<Space>
-					<UserOutlined />
-					<div>
-						<div>{name}</div>
-						<div className="text-gray-500 text-sm">{record.sn}</div>
-					</div>
-				</Space>
+				<div>
+					<div>{name}</div>
+					<div className="text-gray-500 text-sm">{record.sn}</div>
+				</div>
 			),
 		},
 		{
@@ -211,12 +215,11 @@ export default function UserManagementPage() {
 					<p className="mt-1 text-gray-600">管理系统用户</p>
 				</div>
 				<Space>
-					<Button
-						icon={<ReloadOutlined />}
-						onClick={fetchUsers}
-					>
-						刷新
-					</Button>
+					<Input.Search
+						placeholder="请输入关键字"
+						allowClear
+						onSearch={value => setKeyword(value.trim())}
+					/>
 					<Button
 						type="primary"
 						icon={<PlusOutlined />}
@@ -235,9 +238,17 @@ export default function UserManagementPage() {
 				rowKey="id"
 				loading={loading}
 				pagination={{
+					current: page,
+					total,
+					pageSize: pageSize,
 					size: 'default',
-					showQuickJumper: true,
+					showQuickJumper: false,
 					showTotal: total => `共 ${total} 个用户`,
+					onChange: (page, pageSize) => {
+						console.log('page', page, pageSize)
+						setPage(page)
+						setPageSize(pageSize)
+					},
 				}}
 			/>
 

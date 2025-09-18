@@ -5,7 +5,7 @@ import { DifyApi, IFile, IMessageItem4Render } from '@dify-chat/api'
 import { OpeningStatementDisplayMode, Roles, useAppContext } from '@dify-chat/core'
 import { isTempId, useIsMobile } from '@dify-chat/helpers'
 import { useThemeContext } from '@dify-chat/theme'
-import { Button, FormInstance, GetProp, message, Spin } from 'antd'
+import { Button, FormInstance, GetProp, message, Spin, Tooltip } from 'antd'
 import { useDeferredValue, useEffect, useMemo, useRef } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
@@ -410,15 +410,20 @@ export const Chatbox = (props: ChatboxProps) => {
 										.filter(app => app.id !== currentApp?.config.id)
 										.map(app => {
 											return (
-												<Button
-													shape={'round'}
+												<Tooltip
 													key={app.id}
-													onClick={() => {
-														globalAppListStore.setGlobalAppId(app.id)
-													}}
+													placement={'top'}
+													title={app.info.description}
 												>
-													{app.info.name}
-												</Button>
+													<Button
+														shape={'round'}
+														onClick={() => {
+															globalAppListStore.setGlobalAppId(app.id)
+														}}
+													>
+														{app.info.name}
+													</Button>
+												</Tooltip>
 											)
 										})}
 								</div>

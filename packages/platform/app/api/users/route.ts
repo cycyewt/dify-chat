@@ -6,18 +6,53 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 // 获取用户列表
-export async function GET() {
+export async function GET(request: NextRequest) {
 	try {
-		const session = await getServerSession(authOptions)
+		// 创建 URL 对象来解析请求 URL
+		const { searchParams } = new URL(request.url)
+		const keyword = searchParams.get('keyword') ?? ''
+		const page = Number(searchParams.get('page') ?? 1)
+		const pageSize = Number(searchParams.get('pageSize') ?? 10)
+		console.log('keyword:', keyword, page, pageSize)
 
+		const session = await getServerSession(authOptions)
 		if (!session) {
 			return NextResponse.json({ message: '未授权' }, { status: 401 })
 		}
 
+		const where = {
+			OR: [
+				{
+					name: {
+						contains: keyword,
+					},
+				},
+				{
+					sn: {
+						contains: keyword,
+					},
+				},
+				{
+					phoneNumber: {
+						contains: keyword,
+					},
+				},
+				{
+					agency: {
+						path: '$.name',
+						string_contains: keyword,
+					},
+				},
+			],
+			isDeleted: false,
+		}
+		const total = await prisma.user.count({
+			where,
+		})
 		const users = await prisma.user.findMany({
-			where: {
-				isDeleted: false,
-			},
+			where,
+			skip: (page - 1) * pageSize,
+			take: pageSize,
 			select: {
 				id: true,
 				name: true,
@@ -64,7 +99,10 @@ export async function GET() {
 			}
 		})
 
-		return NextResponse.json(results)
+		return NextResponse.json({
+			total,
+			rows: results,
+		})
 	} catch (error) {
 		console.error('获取用户列表失败:', error)
 		return NextResponse.json({ message: '服务器错误' }, { status: 500 })

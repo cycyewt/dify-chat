@@ -58,8 +58,7 @@ export default function AdminPageLayout(props: IAdminPageLayoutProps) {
 						arrow
 					>
 						<Button
-							type="primary"
-							ghost
+							variant={'outlined'}
 							shape="round"
 							icon={<UserOutlined />}
 						>
