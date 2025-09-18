@@ -29,8 +29,8 @@ export default function AuthPage() {
 					<div className={'mt-2 text-center'}>
 						<img
 							src={LogoImage}
-							width={64}
-							height={64}
+							width={96}
+							height={96}
 							alt=""
 						/>
 					</div>

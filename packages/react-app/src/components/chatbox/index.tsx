@@ -21,6 +21,10 @@ import { WelcomePlaceholder } from './welcome-placeholder'
 
 export interface ChatboxProps {
 	/**
+	 * 初始化加载中
+	 */
+	initLoading: boolean
+	/**
 	 * 消息列表
 	 */
 	messageItems: IMessageItem4Render[]
@@ -102,6 +106,7 @@ export interface ChatboxProps {
  */
 export const Chatbox = (props: ChatboxProps) => {
 	const {
+		initLoading,
 		messageItems,
 		isRequesting,
 		nextSuggestions,
@@ -359,64 +364,68 @@ export const Chatbox = (props: ChatboxProps) => {
 						/>
 					</InfiniteScroll>
 				</div>
-				<div
-					className="absolute bg-theme-main-bg w-full md:!w-4/5 lg:!w-3/4 xl:!w-3/5  left-1/2"
-					style={{
-						transform:
-							messageItems.length === 0 ? 'translate3d(-50%, -50%, 0)' : 'translateX(-50%)',
-						top: messageItems.length === 0 ? '50%' : 'auto',
-						bottom: messageItems.length === 0 ? 'auto' : 0,
-					}}
-				>
-					{/* 🌟 输入框 */}
-					{messageItems.length === 0 && (
-						<div className={'mb-8 text-2xl text-center font-semibold'}>今天有什么可以帮到你？</div>
-					)}
-					<div className="px-11">
-						<MessageSender
-							onSubmit={async (...params) => {
-								return validateAndGenErrMsgs(entryForm).then(res => {
-									if (res.isSuccess) {
-										return onSubmit(...params)
-									} else {
-										message.error(res.errMsgs)
-										return Promise.reject(`表单校验失败: ${res.errMsgs}`)
-									}
-								})
-							}}
-							isRequesting={isRequesting}
-							className="w-full !text-theme-text"
-							uploadFileApi={(...params) => {
-								return difyApi.uploadFile(...params)
-							}}
-							audio2TextApi={(...params) => difyApi.audio2Text(...params)}
-							onCancel={onCancel}
-						/>
-					</div>
-					<div className="px-11 text-theme-desc text-sm text-center leading-8 truncate">
-						{messageItems.length > 0 ? (
-							currentApp?.site?.custom_disclaimer || '内容由 AI 生成，仅供参考'
-						) : (
-							<div className={'flex justify-center gap-3 flex-wrap pt-6'}>
-								{globalAppListStore.globalAppList
-									.filter(app => app.id !== currentApp?.config.id)
-									.map(app => {
-										return (
-											<Button
-												shape={'round'}
-												key={app.id}
-												onClick={() => {
-													globalAppListStore.setGlobalAppId(app.id)
-												}}
-											>
-												{app.info.name}
-											</Button>
-										)
-									})}
+				{!initLoading && (
+					<div
+						className="absolute bg-theme-main-bg w-full md:!w-4/5 lg:!w-3/4 xl:!w-3/5  left-1/2"
+						style={{
+							transform:
+								messageItems.length === 0 ? 'translate3d(-50%, -50%, 0)' : 'translateX(-50%)',
+							top: messageItems.length === 0 ? '50%' : 'auto',
+							bottom: messageItems.length === 0 ? 'auto' : 0,
+						}}
+					>
+						{/* 🌟 输入框 */}
+						{messageItems.length === 0 && (
+							<div className={'mb-8 text-2xl text-center font-semibold'}>
+								今天有什么可以帮到你？
 							</div>
 						)}
+						<div className="px-11">
+							<MessageSender
+								onSubmit={async (...params) => {
+									return validateAndGenErrMsgs(entryForm).then(res => {
+										if (res.isSuccess) {
+											return onSubmit(...params)
+										} else {
+											message.error(res.errMsgs)
+											return Promise.reject(`表单校验失败: ${res.errMsgs}`)
+										}
+									})
+								}}
+								isRequesting={isRequesting}
+								className="w-full !text-theme-text"
+								uploadFileApi={(...params) => {
+									return difyApi.uploadFile(...params)
+								}}
+								audio2TextApi={(...params) => difyApi.audio2Text(...params)}
+								onCancel={onCancel}
+							/>
+						</div>
+						<div className="px-11 text-theme-desc text-sm text-center leading-8 truncate">
+							{messageItems.length > 0 ? (
+								currentApp?.site?.custom_disclaimer || '内容由 AI 生成，仅供参考'
+							) : (
+								<div className={'flex justify-center gap-3 flex-wrap pt-6'}>
+									{globalAppListStore.globalAppList
+										.filter(app => app.id !== currentApp?.config.id)
+										.map(app => {
+											return (
+												<Button
+													shape={'round'}
+													key={app.id}
+													onClick={() => {
+														globalAppListStore.setGlobalAppId(app.id)
+													}}
+												>
+													{app.info.name}
+												</Button>
+											)
+										})}
+								</div>
+							)}
+						</div>
 					</div>
-				</div>
+				)}
 			</div>
 		</div>
 	)

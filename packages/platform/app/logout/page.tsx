@@ -29,8 +29,8 @@ export default function LogoutPage() {
 					<div className={'mt-2 flex justify-center'}>
 						<Image
 							src={LogoImage}
-							width={64}
-							height={64}
+							width={96}
+							height={96}
 							alt=""
 						/>
 					</div>

@@ -62,7 +62,7 @@ export default function ChatboxWrapper(props: IChatboxWrapperProps) {
 		}
 	}, [])
 	// 是否允许消息列表请求时展示 loading
-	const [messagesloadingEnabled, setMessagesloadingEnabled] = useState(true)
+	const [messagesLoadingEnabled, setMessagesLoadingEnabled] = useState(true)
 	const [initLoading, setInitLoading] = useState<boolean>(false)
 	const [historyMessages, setHistoryMessages] = useState<IMessageItem4Render[]>([])
 	const [hasMore, setHasMore] = useState<boolean>(false)
@@ -296,7 +296,7 @@ export default function ChatboxWrapper(props: IChatboxWrapperProps) {
 		getConversationMessages: (conversationId: string) =>
 			initConversationMessages(conversationId, false),
 		onConversationIdChange: id => {
-			setMessagesloadingEnabled(false)
+			setMessagesLoadingEnabled(false)
 			setCurrentConversationId(id)
 			conversationItemsChangeCallback()
 		},
@@ -316,8 +316,8 @@ export default function ChatboxWrapper(props: IChatboxWrapperProps) {
 	}
 
 	useEffect(() => {
-		if (!messagesloadingEnabled) {
-			setMessagesloadingEnabled(true)
+		if (!messagesLoadingEnabled) {
+			setMessagesLoadingEnabled(true)
 		} else {
 			// 只有允许 loading 时，才清空对话列表数据
 			setInitLoading(true)
@@ -429,6 +429,7 @@ export default function ChatboxWrapper(props: IChatboxWrapperProps) {
 
 				{currentConversationId ? (
 					<Chatbox
+						initLoading={initLoading}
 						conversationId={currentConversationId!}
 						nextSuggestions={nextSuggestions}
 						messageItems={messageItems}
