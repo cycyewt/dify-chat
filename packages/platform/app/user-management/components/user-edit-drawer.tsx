@@ -128,6 +128,7 @@ export default function UserEditDrawer({
 			fetchUserRoles()
 			fetchAgencies()
 		}
+		form.resetFields()
 	}, [visible])
 
 	const handleSubmit = async (values: UserFormData) => {
