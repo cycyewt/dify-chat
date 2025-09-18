@@ -1,7 +1,7 @@
 import { IAgentThought, IFileType, IRetrieverResource } from '@dify-chat/api'
 import { DifyApi as DirectDifyApi } from '@dify-chat/api'
 import { IDifyAppItem, IDifyAppSiteSetting } from '@dify-chat/core'
-import { BaseRequest as XRequest } from '@dify-chat/helpers'
+import { LocalStorageStore, BaseRequest as XRequest } from '@dify-chat/helpers'
 
 import { isDebugMode } from '@/components/debug-mode'
 
@@ -392,15 +392,20 @@ export interface IAudio2TextResponse {
 
 const PLATFORM_API_BASE = process.env.PUBLIC_DIFY_PROXY_API_BASE as string
 
+const genXRequestOptions = (options: IDifyApiOptions) => ({
+	baseURL: `${PLATFORM_API_BASE}${options.apiBase}`,
+	headers: {
+		'x-user-id': LocalStorageStore.get('USER_ID'),
+	},
+})
+
 /**
  * Dify API 类
  */
 export class DifyApi {
 	constructor(options: IDifyApiOptions) {
 		this.options = options
-		this.baseRequest = new XRequest({
-			baseURL: `${PLATFORM_API_BASE}${options.apiBase}`,
-		})
+		this.baseRequest = new XRequest(genXRequestOptions(options))
 	}
 
 	options: IDifyApiOptions
@@ -411,9 +416,7 @@ export class DifyApi {
 	 */
 	updateOptions = (options: IDifyApiOptions) => {
 		this.options = options
-		this.baseRequest = new XRequest({
-			baseURL: `${PLATFORM_API_BASE}${options.apiBase}`,
-		})
+		this.baseRequest = new XRequest(genXRequestOptions(options))
 	}
 
 	/**
@@ -475,7 +478,7 @@ export class DifyApi {
 		auto_generate?: boolean
 	}) => {
 		const { conversation_id, ...restParams } = params
-		return this.baseRequest.post(`/conversations/${conversation_id}/name`, {
+		return this.baseRequest.post(`/conversation/${conversation_id}/name`, {
 			...restParams,
 			user: this.options.user,
 		})
@@ -485,7 +488,7 @@ export class DifyApi {
 	 * 删除会话
 	 */
 	deleteConversation = (conversation_id: string) => {
-		return this.baseRequest.delete(`/conversations/${conversation_id}`, {
+		return this.baseRequest.delete(`/conversation/${conversation_id}`, {
 			user: this.options.user,
 		})
 	}
@@ -585,7 +588,8 @@ export class DifyApi {
 				method: 'POST',
 				body: formData,
 			})
-			.then(res => res.json()) as Promise<IUploadFileResponse>
+			.then(res => res.json())
+			.then(res => res.data) as Promise<IUploadFileResponse>
 	}
 
 	/**

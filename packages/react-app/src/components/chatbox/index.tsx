@@ -255,6 +255,10 @@ export const Chatbox = (props: ChatboxProps) => {
 	// 延迟更新，优化性能
 	const deferredItems = useDeferredValue(items)
 	useEffect(() => {
+		// 如果非请求中，不滚动（防止影响下拉刷新工能）
+		if (!isRequesting) {
+			return
+		}
 		if (scrollContainerRef.current) {
 			scrollContainerRef.current.scrollTo({
 				behavior: 'smooth',
@@ -277,17 +281,15 @@ export const Chatbox = (props: ChatboxProps) => {
 
 	return (
 		<div className="w-full h-full overflow-hidden my-0 mx-auto box-border flex flex-col gap-4 relative">
-			<div
-				className="w-full h-full overflow-auto pt-1 pb-24"
-				ref={scrollContainerRef}
-			>
+			<div className="w-full h-full overflow-hidden pt-1 pb-24">
 				<div
 					id="scrollableDiv"
+					ref={scrollContainerRef}
 					style={{
-						height: '100%', // Specify a value
+						height: '100%',
 						overflow: 'auto',
 						display: 'flex',
-						flexDirection: messageItems.length > 40000 ? 'column-reverse' : 'column',
+						flexDirection: 'column-reverse',
 					}}
 				>
 					<InfiniteScroll
@@ -303,13 +305,15 @@ export const Chatbox = (props: ChatboxProps) => {
 								/>
 							</div>
 						}
-						inverse={true}
+						inverse
 						style={{
 							display: 'flex',
 							flexDirection: 'column-reverse',
+							// 减去除消息列表外其他纵向元素的高度
+							minHeight: 'calc(100vh - 10.25rem)',
 						}}
 					>
-						<div className="flex-1 w-full md:!w-4/5 lg:!w-3/4 xl:!w-3/5 mx-auto px-3 md:px-0 box-border">
+						<div className="flex-1 w-full md:!w-4/5 lg:!w-3/4 xl:!w-3/5 mx-auto px-3 pb-6 md:px-0 box-border">
 							{/* 🌟 消息列表 */}
 							<Bubble.List
 								items={items}
