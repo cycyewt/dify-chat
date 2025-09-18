@@ -6,7 +6,7 @@ import { ThemeContextProvider, useThemeContext } from '@dify-chat/theme'
 import { ConfigProvider, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { usePathname } from 'next/navigation'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 import AuthGuard from '../auth/auth-guard'
 import AdminPageLayout from './admin-page-layout'
@@ -39,7 +39,7 @@ export default function PageLayoutWrapper({ children }: { children: React.ReactN
 		<ThemeContextProvider>
 			<ThemeContextWrapper>
 				{isAuthPage ? (
-					children
+					<Suspense>{children}</Suspense>
 				) : (
 					<AuthGuard>
 						<AdminPageLayout>{children}</AdminPageLayout>

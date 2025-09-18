@@ -14,6 +14,8 @@ export const authOptions = {
 				sn: { label: '账号', type: 'text' },
 				password: { label: '密码', type: 'password' },
 			},
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
 			async authorize(credentials) {
 				if (!credentials?.scene || !credentials?.sn || !credentials?.password) {
 					return null
