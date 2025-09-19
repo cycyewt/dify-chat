@@ -2,6 +2,7 @@
 
 # 生产环境启动脚本
 # 使用 PM2 管理 Platform 服务，构建 React App 静态文件
+export DATABASE_URL="mysql://root:admin123456@localhost/aihub?serverTimezone=Asia/Shanghai&characterEncoding=utf-8"
 
 set -e
 
