@@ -86,7 +86,6 @@ export default function PasswordPage() {
 							name="login"
 							onFinish={onFinish}
 							autoComplete="new-password"
-							size="large"
 							layout={'vertical'}
 						>
 							<Form.Item

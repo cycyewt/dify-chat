@@ -94,7 +94,6 @@ export default function LoginPage() {
 							name="login"
 							onFinish={onFinish}
 							autoComplete="off"
-							size="large"
 							layout={'vertical'}
 						>
 							<Form.Item
