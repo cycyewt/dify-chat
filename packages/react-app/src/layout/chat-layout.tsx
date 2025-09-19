@@ -8,7 +8,7 @@ import {
 import { DifyApi, IConversationItem } from '@dify-chat/api'
 import { ConversationsContextProvider, IDifyAppItem, useAppContext } from '@dify-chat/core'
 import { generateUuidV4, isTempId, useIsMobile } from '@dify-chat/helpers'
-import { ThemeModeEnum, ThemeModeLabelEnum, useThemeContext } from '@dify-chat/theme'
+import { useThemeContext } from '@dify-chat/theme'
 import {
 	Button,
 	Dropdown,
@@ -19,7 +19,6 @@ import {
 	message,
 	Modal,
 	Popover,
-	Radio,
 	Spin,
 	Tooltip,
 } from 'antd'
@@ -27,7 +26,7 @@ import dayjs from 'dayjs'
 import { useSearchParams } from 'pure-react-router'
 import React, { useEffect, useMemo, useState } from 'react'
 
-import { AppIcon, AppInfo, ConversationList, LucideIcon } from '@/components'
+import { ConversationList, LucideIcon } from '@/components'
 import { HeaderLayout } from '@/components'
 import ChatboxWrapper from '@/components/chatbox-wrapper'
 import { DEFAULT_CONVERSATION_NAME } from '@/constants'
