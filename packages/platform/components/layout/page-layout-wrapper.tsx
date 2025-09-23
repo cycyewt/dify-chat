@@ -21,6 +21,10 @@ const ThemeContextWrapper = ({ children }: { children: React.ReactNode }) => {
 			locale={zhCN}
 			theme={{
 				algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+				token: {
+					colorPrimary: '#4b5bf5',
+					colorLink: '#4b5bf5',
+				},
 			}}
 		>
 			{children}

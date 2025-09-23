@@ -56,14 +56,14 @@ export const Logo = (props: ILogoProps) => {
 					renderLogo()
 				) : (
 					<img
-						className="w-8 h-8 inline-block"
+						className="w-10 h-10 inline-block"
 						src={LogoImage}
 						draggable={false}
 						alt="logo"
 					/>
 				)}
 				{!hideText ? (
-					<span className="inline-block my-0 ml-3 font-bold text-lg text-theme-text">
+					<span className="inline-block my-0 ml-2 font-bold text-lg text-theme-text">
 						{text ?? 'Dify Chat'}
 					</span>
 				) : null}

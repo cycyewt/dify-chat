@@ -130,7 +130,12 @@ export default function AppManagementPage() {
 							return record.info.tags?.length
 								? record.info.tags.map((tag: string) => (
 										<div key={tag}>
-											<Tag className="!m-0">{tag}</Tag>
+											<Tag
+												className="!m-0 !text-[#556072]"
+												color="#ebeced"
+											>
+												{tag}
+											</Tag>
 										</div>
 									))
 								: null
@@ -142,9 +147,19 @@ export default function AppManagementPage() {
 						width: 140,
 						render: (_text, record) => {
 							return record.isEnabled ? (
-								<Tag color="success">已启用</Tag>
+								<Tag
+									className="!text-[#1cc78d]"
+									color="#edfdf7"
+								>
+									已启用
+								</Tag>
 							) : (
-								<Tag color="default">已禁用</Tag>
+								<Tag
+									className="!m-0 !text-[#556072]"
+									color="#ebeced"
+								>
+									已禁用
+								</Tag>
 							)
 						},
 					},

@@ -30,8 +30,8 @@ export default function Home() {
 		return (
 			<div className="flex items-center justify-center min-h-screen">
 				<div className="text-center">
-					<h1 className="text-2xl font-bold mb-4">欢迎使用AI应用平台管理系统</h1>
-					<p className="text-gray-600 mb-6">请先登录以访问应用管理功能</p>
+					<h1 className="text-2xl font-bold mb-4">欢迎使用和田公安人工智能专栏</h1>
+					<p className="text-gray-600 mb-6">请先登录以访问管理功能</p>
 					<button
 						onClick={() => router.push('/login')}
 						className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

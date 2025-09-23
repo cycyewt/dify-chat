@@ -8,7 +8,6 @@ import { prisma } from '@/lib/prisma'
 // 获取用户列表
 export async function GET(request: NextRequest) {
 	try {
-		// 创建 URL 对象来解析请求 URL
 		const { searchParams } = new URL(request.url)
 		const keyword = searchParams.get('keyword') ?? ''
 		const page = Number(searchParams.get('page') ?? 1)

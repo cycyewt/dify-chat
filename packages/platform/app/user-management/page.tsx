@@ -144,7 +144,12 @@ export default function UserManagementPage() {
 					<>
 						{record.roles.map(role => (
 							<div key={role.id}>
-								<Tag>{role.name}</Tag>
+								<Tag
+									className="!m-0 !text-[#556072]"
+									color="#ebeced"
+								>
+									{role.name}
+								</Tag>
 							</div>
 						))}
 					</>
@@ -155,7 +160,16 @@ export default function UserManagementPage() {
 			title: '状态',
 			dataIndex: 'isEnabled',
 			render: (isEnabled: boolean) =>
-				isEnabled ? <Tag color="green">正常</Tag> : <Tag color="red">禁用</Tag>,
+				isEnabled ? (
+					<Tag
+						className="!text-[#1cc78d]"
+						color="#edfdf7"
+					>
+						正常
+					</Tag>
+				) : (
+					<Tag color="red">禁用</Tag>
+				),
 		},
 		{
 			title: '创建时间',

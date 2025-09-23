@@ -1,7 +1,7 @@
 'use client'
 
-import { PlusOutlined, ReloadOutlined } from '@ant-design/icons'
-import { Button, message, Popconfirm, Space, Table, TableColumnsType, Tag } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import { Button, Input, message, Popconfirm, Space, Table, TableColumnsType, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
 import { useEffect, useState } from 'react'
 
@@ -23,13 +23,20 @@ export default function RoleManagementPage() {
 	const [drawerVisible, setDrawerVisible] = useState(false)
 	const [editingRole, setEditingRole] = useState<Role | null>(null)
 
+	const [keyword, setKeyword] = useState('')
+	const [page, setPage] = useState(1)
+	const [pageSize, setPageSize] = useState(2)
+	const [total, setTotal] = useState(0)
 	const fetchRoles = async () => {
 		setLoading(true)
 		try {
-			const response = await fetch('/api/roles')
+			const response = await fetch(
+				`/api/roles?keyword=${keyword}&page=${page}&pageSize=${pageSize}`,
+			)
 			if (response.ok) {
 				const data = await response.json()
-				setRoles(data)
+				setRoles(data.rows)
+				setTotal(data.total)
 			} else {
 				message.open({
 					type: 'error',
@@ -99,6 +106,10 @@ export default function RoleManagementPage() {
 		fetchRoles()
 	}, [])
 
+	useEffect(() => {
+		fetchRoles()
+	}, [keyword, page, pageSize])
+
 	const columns: TableColumnsType<Role> = [
 		{
 			title: 'ID',
@@ -124,7 +135,12 @@ export default function RoleManagementPage() {
 					<>
 						{record.apps.map(app => (
 							<div key={app.id}>
-								<Tag>{app.name}</Tag>
+								<Tag
+									className="!m-0 !text-[#556072]"
+									color="#ebeced"
+								>
+									{app.name}
+								</Tag>
 							</div>
 						))}
 					</>
@@ -187,12 +203,11 @@ export default function RoleManagementPage() {
 					<p className="mt-1 text-gray-600">管理系统用户角色</p>
 				</div>
 				<Space>
-					<Button
-						icon={<ReloadOutlined />}
-						onClick={fetchRoles}
-					>
-						刷新
-					</Button>
+					<Input.Search
+						placeholder="请输入关键字"
+						allowClear
+						onSearch={value => setKeyword(value.trim())}
+					/>
 					<Button
 						type="primary"
 						className={'leading-none'}
@@ -210,9 +225,17 @@ export default function RoleManagementPage() {
 				rowKey="id"
 				loading={loading}
 				pagination={{
+					current: page,
+					total,
+					pageSize: pageSize,
 					size: 'default',
-					showQuickJumper: true,
+					showQuickJumper: false,
 					showTotal: total => `共 ${total} 个角色`,
+					onChange: (page, pageSize) => {
+						console.log('page', page, pageSize)
+						setPage(page)
+						setPageSize(pageSize)
+					},
 				}}
 			/>
 
