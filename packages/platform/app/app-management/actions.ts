@@ -11,15 +11,30 @@ import { IDifyAppItem } from '@/types'
 
 import { maskApiKey4AppConfig } from './utils'
 
-export async function listApp({ isMask = false }: { isMask?: boolean } = {}) {
-	const res = await getAppListFromRepository()
+export async function listApp(
+	{
+		keyword,
+		page,
+		pageSize,
+		isMask = false,
+	}: { keyword: string; page: number; pageSize: number; isMask?: boolean } = {
+		keyword: '',
+		page: 1,
+		pageSize: 10,
+		isMask: false,
+	},
+) {
+	const res = await getAppListFromRepository(keyword, page, pageSize)
 	if (isMask) {
 		const result = await Promise.all(
-			res.map(item => {
+			res.rows.map(item => {
 				return maskApiKey4AppConfig(item)
 			}),
 		)
-		return result
+		return {
+			total: res.total,
+			rows: result,
+		}
 	}
 	return res
 }

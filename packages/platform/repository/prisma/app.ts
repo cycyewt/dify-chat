@@ -58,15 +58,45 @@ export const getAppList = async (userId?: number): Promise<IDifyAppItem[]> => {
 /**
  * 获取应用分页列表数据
  */
-export const getPagedAppList = async (): Promise<IDifyAppItem[]> => {
+export const getPagedAppList = async (
+	keyword: string,
+	page: number,
+	pageSize: number,
+): Promise<{ total: number; rows: IDifyAppItem[] }> => {
 	try {
+		const where = {
+			OR: [
+				{
+					name: {
+						contains: keyword,
+					},
+				},
+				{
+					description: {
+						contains: keyword,
+					},
+				},
+				{
+					tags: {
+						contains: keyword,
+					},
+				},
+			],
+			isDeleted: false,
+		}
+		const total = await prisma.difyApp.count({
+			where,
+		})
 		const dbApps = await prisma.difyApp.findMany({
-			where: {
-				isDeleted: false,
-			},
+			where,
+			skip: (page - 1) * pageSize,
+			take: pageSize,
 		})
 
-		return dbApps.map(dbAppToAppItem)
+		return {
+			total,
+			rows: dbApps.map(dbAppToAppItem),
+		}
 	} catch (error) {
 		console.error('Error fetching app list:', error)
 		throw new Error('Failed to fetch app list')

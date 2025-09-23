@@ -1,13 +1,13 @@
 'use client'
 
-import { PlusOutlined, ReloadOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import { DifyApi } from '@dify-chat/api'
 import { AppModeEnums, IDifyAppItem } from '@dify-chat/core'
 import { AppModeNames } from '@dify-chat/core'
 import { useMount, useRequest } from 'ahooks'
-import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
+import { Button, Input, message, Popconfirm, Space, Table, Tag } from 'antd'
 import Title from 'antd/es/typography/Title'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { addApp } from '@/repository/app'
 
@@ -20,13 +20,25 @@ export default function AppManagementPage() {
 	const [appEditDrawerMode, setAppEditDrawerMode] = useState<AppDetailDrawerModeEnum>()
 	const [appEditDrawerAppItem, setAppEditDrawerAppItem] = useState<IDifyAppItem>()
 
+	const [keyword, setKeyword] = useState('')
+	const [page, setPage] = useState(1)
+	const [pageSize, setPageSize] = useState(10)
+	const [total, setTotal] = useState(0)
 	const {
 		runAsync: getAppList,
 		data: list,
 		loading: listLoading,
 	} = useRequest(
-		() => {
-			return listApp()
+		async () => {
+			const res = await listApp({
+				keyword,
+				page,
+				pageSize,
+			})
+
+			setTotal(res.total)
+
+			return Promise.resolve(res)
 		},
 		{
 			manual: true,
@@ -36,6 +48,10 @@ export default function AppManagementPage() {
 	useMount(() => {
 		getAppList()
 	})
+
+	useEffect(() => {
+		getAppList()
+	}, [keyword, page, pageSize])
 
 	return (
 		<div className="mx-auto px-4 w-full 2xl:!w-3/4 h-full">
@@ -50,12 +66,11 @@ export default function AppManagementPage() {
 					<p className="mt-1 text-gray-600">管理 Dify 中配置的应用</p>
 				</div>
 				<Space>
-					<Button
-						icon={<ReloadOutlined />}
-						onClick={getAppList}
-					>
-						刷新
-					</Button>
+					<Input.Search
+						placeholder="请输入关键字"
+						allowClear
+						onSearch={value => setKeyword(value.trim())}
+					/>
 					<Button
 						type="primary"
 						icon={<PlusOutlined />}
@@ -73,7 +88,7 @@ export default function AppManagementPage() {
 
 			<Table
 				size={'small'}
-				dataSource={list}
+				dataSource={list?.rows ?? []}
 				rowKey="id"
 				loading={listLoading}
 				scroll={{ x: 1200 }}
@@ -230,9 +245,17 @@ export default function AppManagementPage() {
 					},
 				]}
 				pagination={{
+					current: page,
+					total,
+					pageSize: pageSize,
 					size: 'default',
-					showQuickJumper: true,
+					showQuickJumper: false,
 					showTotal: total => `共 ${total} 个应用`,
+					onChange: (page, pageSize) => {
+						console.log('page', page, pageSize)
+						setPage(page)
+						setPageSize(pageSize)
+					},
 				}}
 			/>
 

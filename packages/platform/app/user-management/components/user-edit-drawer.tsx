@@ -68,7 +68,7 @@ export default function UserEditDrawer({
 					sn: user.sn || '',
 					phoneNumber: user.phoneNumber || '',
 					agency: user.agency.id ?? undefined,
-					agencyName: user.name || '',
+					agencyName: user.agency.name || '',
 					roles: user.roles.map(role => role.id),
 				})
 			} else {
