@@ -10,6 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { useGlobalAppListStore } from '@/store/global-app-list.ts'
 import { validateAndGenErrMsgs } from '@/utils'
+
 import { MessageSender } from '../message-sender'
 import MessageContent from './message/content'
 import MessageFooter from './message/footer'
@@ -102,6 +103,7 @@ export interface ChatboxProps {
  */
 export const Chatbox = (props: ChatboxProps) => {
 	const {
+		initLoading,
 		messageItems,
 		isRequesting,
 		nextSuggestions,
