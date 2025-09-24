@@ -4,17 +4,13 @@ import { Bubble } from '@ant-design/x'
 import { DifyApi, IFile, IMessageItem4Render } from '@dify-chat/api'
 import { OpeningStatementDisplayMode, Roles, useAppContext } from '@dify-chat/core'
 import { isTempId, useIsMobile } from '@dify-chat/helpers'
-import { useThemeContext } from '@dify-chat/theme'
 import { Button, FormInstance, GetProp, message, Spin, Tooltip } from 'antd'
 import { useDeferredValue, useEffect, useMemo, useRef } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { useGlobalAppListStore } from '@/store/global-app-list.ts'
 import { validateAndGenErrMsgs } from '@/utils'
-
-import LucideIcon from '../lucide-icon'
 import { MessageSender } from '../message-sender'
-import AppIcon from './app-icon'
 import MessageContent from './message/content'
 import MessageFooter from './message/footer'
 import { WelcomePlaceholder } from './welcome-placeholder'
@@ -106,7 +102,6 @@ export interface ChatboxProps {
  */
 export const Chatbox = (props: ChatboxProps) => {
 	const {
-		initLoading,
 		messageItems,
 		isRequesting,
 		nextSuggestions,
@@ -125,57 +120,19 @@ export const Chatbox = (props: ChatboxProps) => {
 	const globalAppListStore = useGlobalAppListStore()
 	const isMobile = useIsMobile()
 	const { currentApp } = useAppContext()
-	const { isDark } = useThemeContext()
-	const aiIcon = currentApp?.site?.use_icon_as_answer_icon ? (
-		<AppIcon hasContainer />
-	) : (
-		<LucideIcon
-			name="bot-message-square"
-			size={18}
-		/>
-	)
 
 	const roles: GetProp<typeof Bubble.List, 'roles'> = {
 		ai: {
 			placement: 'start',
-			avatar: !isMobile
-				? {
-						icon: aiIcon,
-						style: {
-							background: currentApp?.site?.icon_background || (isDark ? 'transparent' : '#fde3cf'),
-							border: isDark ? '1px solid var(--theme-border-color)' : 'none',
-							color: isDark ? 'var(--theme-text-color)' : '#666',
-						},
-					}
-				: undefined,
-			style: isMobile
-				? undefined
-				: {
-						// 减去一个头像的宽度
-						maxWidth: 'calc(100% - 44px)',
-					},
 		},
 		user: {
 			placement: 'end',
-			avatar: !isMobile
-				? {
-						icon: (
-							<LucideIcon
-								name="user"
-								size={18}
-							/>
-						),
-						style: {
-							background: '#87d068',
-						},
-					}
-				: undefined,
 			style: isMobile
 				? undefined
 				: {
 						// 减去一个头像的宽度
-						maxWidth: 'calc(100% - 44px)',
-						marginLeft: '44px',
+						maxWidth: '80%',
+						marginLeft: '20%',
 					},
 		},
 	}
@@ -318,7 +275,7 @@ export const Chatbox = (props: ChatboxProps) => {
 							minHeight: 'calc(100vh - 10.25rem)',
 						}}
 					>
-						<div className="flex-1 w-full md:!w-4/5 lg:!w-3/4 xl:!w-3/5 mx-auto px-3 pb-6 md:px-0 box-border">
+						<div className="flex-1 w-full md:!w-[720px] mx-auto px-3 pb-6 md:px-0 box-border">
 							{/* 🌟 消息列表 */}
 							<Bubble.List
 								items={items}
@@ -366,7 +323,7 @@ export const Chatbox = (props: ChatboxProps) => {
 				</div>
 				{!initLoading && (
 					<div
-						className="absolute bg-theme-main-bg w-full md:!w-4/5 lg:!w-3/4 xl:!w-3/5  left-1/2"
+						className="absolute bg-theme-main-bg w-full md:max-w-[720px]  left-1/2"
 						style={{
 							transform:
 								messageItems.length === 0 ? 'translate3d(-50%, -50%, 0)' : 'translateX(-50%)',
